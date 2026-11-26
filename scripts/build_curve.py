@@ -3,6 +3,8 @@
   --version v0  tiers relative to the best model each month, index = tier median price
   --version v1  absolute ECI thresholds, index = cheapest model at or above the threshold
   --version v2  v1 bands, forecast = one floor rate for every band plus a catch-up lag for newly reached bands
+  --version v3  v2 bands priced from one reference provider per model, plus frontier and mid tiers;
+                base case per tier from a structural-break (floor) test
 
 Inputs:  data/price_history.parquet, data/prices.parquet (OpenRouter daily), data/model_map.csv, data/models.csv
 Outputs: data/curves/curve_<v>.csv, curve_<v>.json, panel_<v>.parquet, tier_history_<v>.csv,
@@ -47,7 +49,20 @@ V2_THRESHOLDS = [120, 130, 140, 150, 160]  # v2 needs no fit per band, so >= 160
 GAP = 3.0                       # v2: a band is in its floor phase once its price is within 3x of the band below
 FALLBACK_LAG = 9                # v2: catch-up lag (months) when no band has converged yet
 ROLL_HORIZON = 6                # v2: rolling-origin backtest horizon (months)
+# v3: one reference provider per model for hosted (non-first-party) prices
+REF_PREFERENCE = ["together_ai", "fireworks_ai", "deepinfra", "groq", "bedrock", "bedrock_converse", "azure_ai",
+                  "vertex_ai", "nebius", "novita"]  # tie-break among providers with equally long price histories
+GATEWAYS = {"openrouter", "vercel_ai_gateway", "aihubmix", "github_copilot", "opencode_go", "ollama"}  # resellers
+BROKEN_KEY_FACTOR = 20          # a provider-month priced > 20x the cheapest provider that month is a units error
 PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"]  # dataviz reference categorical slots 1-5, fixed order
+# v3: tiers that answer "what do models near the frontier cost", by ECI points below the best priced model that month
+GAP_TIERS = [("mid", 5, 15), ("frontier", 0, 5)]
+GAP_TIER_MAX_AGE = 12           # months since release; keeps old, still-listed models out of the medians
+GAP_COLORS = {"mid": "#008300", "frontier": "#6250d6"}  # reference slots 6 (green) and 7 (violet)
+BREAK_MIN_SIDE = 6              # months on each side of a candidate break
+BREAK_ALPHA = 0.05
+N_BOOT = 999
+BASE_MEDIAN_MONTHS = 3
 
 # set in main() from --version
 VERSION, TIER_NAMES, COLORS, INDEX_LABEL = "v1", [], {}, ""
@@ -61,11 +76,33 @@ def years(d) -> np.ndarray:
 # ---------------------------------------------------------------- panel
 
 
-def build_panel() -> pd.DataFrame:
+def reference_prices(h: pd.DataFrame) -> pd.DataFrame:
+    """v3: one hosting provider per model instead of the median over all of them.
+
+    The reference is the provider (gateways excluded) with the most months of prices for the model; ties go
+    to REF_PREFERENCE order, then name. Months where it has no price fall back to the median of the others.
+    """
+    keys = ["snapshot_date", "canonical_id"]
+    o = h[(h.input_price_per_mtok > 0) & (h.output_price_per_mtok > 0)].copy()
+    o["bl"] = INPUT_WEIGHT * o.input_price_per_mtok + (1 - INPUT_WEIGHT) * o.output_price_per_mtok
+    o = o[o.bl <= BROKEN_KEY_FACTOR * o.groupby(keys).bl.transform("min")]
+    per = o.groupby(keys + ["provider"], as_index=False)[["input_price_per_mtok", "output_price_per_mtok"]].median()
+    cov = per[~per.provider.isin(GATEWAYS)].groupby(["canonical_id", "provider"]).size().rename("n").reset_index()
+    cov["pref"] = cov.provider.map({p: i for i, p in enumerate(REF_PREFERENCE)}).fillna(len(REF_PREFERENCE))
+    ref = (cov.sort_values(["canonical_id", "n", "pref", "provider"], ascending=[True, False, True, True])
+           .drop_duplicates("canonical_id").set_index("canonical_id").provider)
+    per["is_ref"] = per.provider.eq(per.canonical_id.map(ref))
+    has_ref = per.groupby(keys).is_ref.transform("any")
+    fallback = per[~has_ref].groupby(keys, as_index=False)[["input_price_per_mtok", "output_price_per_mtok"]].median()
+    return pd.concat([per[per.is_ref].drop(columns="is_ref").assign(tier_src="litellm_ref"),
+                      fallback.assign(tier_src="litellm_median")], ignore_index=True)
+
+
+def build_panel(ref_provider: bool = False) -> pd.DataFrame:
     """One blended price per canonical model per month.
 
-    Source priority: model maker's own LiteLLM rows (median over keys) > llm-prices > median of all
-    LiteLLM providers > OpenRouter (monthly mean of daily snapshots).
+    Source priority: model maker's own LiteLLM rows (median over keys) > llm-prices > other LiteLLM providers
+    (median of all, or with ref_provider one reference provider per model) > OpenRouter (monthly mean).
     """
     h = pd.read_parquet(DATA / "price_history.parquet")
     h = h[h.canonical_id.notna()].copy()
@@ -74,6 +111,10 @@ def build_panel() -> pd.DataFrame:
         [p in FIRST_PARTY.get(v, set()) for p, v in zip(h.provider.fillna(""), vendor)], dtype=bool)
     h["tier_src"] = np.select(
         [h.first_party, h.source == "llm_prices", h.source == "litellm"], ["litellm_first_party", "llm_prices", "litellm_other"], "")
+
+    if ref_provider:
+        other = h.tier_src == "litellm_other"
+        h = pd.concat([h[~other], reference_prices(h[other])], ignore_index=True)
 
     orp = pd.read_parquet(DATA / "prices.parquet")
     mp = pd.read_csv(DATA / "model_map.csv")
@@ -86,7 +127,7 @@ def build_panel() -> pd.DataFrame:
     allp = pd.concat([h[["snapshot_date", "canonical_id", "input_price_per_mtok", "output_price_per_mtok", "tier_src"]],
                       orp[["snapshot_date", "canonical_id", "input_price_per_mtok", "output_price_per_mtok", "tier_src"]]])
     allp = allp[(allp.input_price_per_mtok > 0) & (allp.output_price_per_mtok > 0)]  # drop free / zero / missing
-    rank = {"litellm_first_party": 0, "llm_prices": 1, "litellm_other": 2, "openrouter": 3}
+    rank = {"litellm_first_party": 0, "llm_prices": 1, "litellm_other": 2, "litellm_ref": 2, "litellm_median": 2, "openrouter": 3}
     allp["src_rank"] = allp.tier_src.map(rank)
     best = allp.groupby(["snapshot_date", "canonical_id"]).src_rank.transform("min")
     allp = allp[allp["src_rank"] == best]
@@ -291,6 +332,183 @@ def score(pr: pd.DataFrame, act: pd.DataFrame, anchor: float) -> dict | None:
             "no_change_mean_abs_log_error_pct": float((np.exp(np.log(anchor / j.index_price).abs().mean()) - 1) * 100)}
 
 
+def gap_tier_index(p: pd.DataFrame) -> pd.DataFrame:
+    """v3: median blended price of models within lo..hi ECI points below the best priced model that month,
+    released in the last GAP_TIER_MAX_AGE months."""
+    q = p.copy()
+    q["gap"] = q.groupby("month").eci.transform("max") - q.eci
+    rel = q.epoch_release_date.fillna(q.groupby("canonical_id").month.transform("min"))
+    q["age"] = (q.month.dt.year - rel.dt.year) * 12 + q.month.dt.month - rel.dt.month
+    rows = []
+    for name, lo, hi in GAP_TIERS:
+        sel = q[(q.gap >= lo) & (q.gap < hi) & (q.age <= GAP_TIER_MAX_AGE)]
+        g = sel.groupby("month").agg(index_price=("blended", "median"), index_input=("input", "median"),
+                                     index_output=("output", "median"), n_models=("canonical_id", "nunique")).reset_index()
+        rows.append(g.assign(tier=name))
+    g = pd.concat(rows, ignore_index=True)
+    g["used"] = g.n_models >= MIN_MODELS
+    g["t"] = years(g.month)
+    return g
+
+
+def _chow_f(y: np.ndarray, t: np.ndarray, k: int) -> float:
+    """F statistic for a break in level and slope after observation k."""
+    ssr0 = sm.OLS(y, sm.add_constant(t)).fit().ssr
+    ssr1 = sum(sm.OLS(z, sm.add_constant(tt)).fit().ssr for z, tt in ((y[:k], t[:k]), (y[k:], t[k:])))
+    return (ssr0 - ssr1) / 2 / max(ssr1 / (len(y) - 4), 1e-12)
+
+
+def _slope(y, t, hac=True):
+    """Annual log slope with 95% CI (HAC, 2 lags); a series with no variation gets a zero-width CI."""
+    r = sm.OLS(y, sm.add_constant(t)).fit()
+    if r.ssr < 1e-12:
+        return float(r.params[1]), (float(r.params[1]), float(r.params[1]))
+    r = sm.OLS(y, sm.add_constant(t)).fit(cov_type="HAC", cov_kwds={"maxlags": 2}) if hac else r
+    lo, hi = r.conf_int()[1]
+    return float(r.params[1]), (float(lo), float(hi))
+
+
+def floor_test(d: pd.DataFrame, rng) -> dict:
+    """v3: has the series flattened? Sup-F (Quandt) test for one break in level and slope, searched over every
+    month with >= BREAK_MIN_SIDE months on each side. p-value by parametric bootstrap under the no-break null
+    (linear trend + AR(1) errors), since the series is short and autocorrelated."""
+    d = d.sort_values("month")
+    y, t = np.log(d.index_price.to_numpy()), d.t.to_numpy()
+    b, ci = _slope(y, t)
+    out = {"n_months": int(len(y)), "first_month": f"{d.month.min():%Y-%m}",
+           "full_annual_factor": float(np.exp(b)), "full_ci95": [float(np.exp(ci[0])), float(np.exp(ci[1]))]}
+    ks = list(range(BREAK_MIN_SIDE, len(y) - BREAK_MIN_SIDE + 1))
+    if not ks:
+        return {**out, "testable": False}
+    F, k = max((_chow_f(y, t, k), k) for k in ks)
+    r0 = sm.OLS(y, sm.add_constant(t)).fit()
+    e = r0.resid
+    rho = float(np.clip(np.corrcoef(e[:-1], e[1:])[0, 1], -0.95, 0.95)) if e.std() > 0 else 0.0
+    sig = float(np.std(e[1:] - rho * e[:-1]))
+    sims = np.empty(N_BOOT)
+    for i in range(N_BOOT):
+        u = np.empty(len(y))
+        u[0] = rng.normal(0, sig / np.sqrt(1 - rho ** 2))
+        for j in range(1, len(y)):
+            u[j] = rho * u[j - 1] + rng.normal(0, sig)
+        sims[i] = max(_chow_f(r0.fittedvalues + u, t, kk) for kk in ks)
+    pre, _ = _slope(y[:k], t[:k], hac=False)
+    post, pci = _slope(y[k:], t[k:])
+    return {**out, "testable": True, "break_month": f"{d.month.iloc[k]:%Y-%m}", "sup_f": float(F),
+            "p_value": float((np.sum(sims >= F) + 1) / (N_BOOT + 1)), "ar1_rho": rho,
+            "pre_annual_factor": float(np.exp(pre)), "post_annual_factor": float(np.exp(post)),
+            "post_ci95": [float(np.exp(pci[0])), float(np.exp(pci[1]))], "post_months": int(len(y) - k)}
+
+
+def base_cases(p: pd.DataFrame, idx: pd.DataFrame, tests: dict, upto: pd.Timestamp, hed_factor: float) -> dict:
+    """v3: base-case rate and starting price per tier, with the reason.
+
+    Rule, in order:
+    1. A band whose cheapest model also sets a lower band's price takes that band's base case (same model, same price).
+    2. Significant break (p < BREAK_ALPHA) and post-break CI includes "no change": floor, held flat.
+    3. Significant break, post-break CI excludes "no change": the post-break rate continues if it falls.
+    4. No significant break: the full-history fitted rate if its CI excludes "no change" and it falls; flat if the CI
+       includes "no change".
+    A base case never projects a rise: a significantly rising trend is held flat and flagged (a judgement call).
+    Starting price: the median of the last BASE_MEDIAN_MONTHS months: of the current cheapest model's own price for
+    bands (so a new cheapest model is not averaged with the one it replaced), of the tier index for mid and frontier.
+    """
+    bands = [t for t in TIER_NAMES if t.startswith("eci>=")]
+    out = {}
+    for tier in bands + [n for n, _, _ in GAP_TIERS]:
+        d = idx[(idx.tier == tier) & idx.used & (idx.month <= upto)].sort_values("month")
+        if d.empty or d.month.max() < upto:
+            continue
+        tst = tests.get(tier) or {}
+        res = {"tier": tier}
+        if tier in bands:
+            model = d.cheapest_model.iloc[-1]
+            mp = p[(p.canonical_id == model) & (p.month <= upto)].sort_values("month").tail(BASE_MEDIAN_MONTHS)
+            res.update(cheapest_model=model, base_price=float(mp.blended.median()))
+            shared = next((b for b in bands[:bands.index(tier)] if b in out and out[b].get("cheapest_model") == model), None)
+        else:
+            res.update(base_price=float(d.index_price.tail(BASE_MEDIAN_MONTHS).median()), n_models=int(d.n_models.iloc[-1]))
+            shared = None
+        res["latest_price"] = float(d.index_price.iloc[-1])
+        if shared:
+            res.update(rule="same model", annual_factor=out[shared]["annual_factor"], floor=out[shared]["floor"],
+                       reason=f"priced by the same model as {shared}; takes its base case")
+        elif tst.get("testable") and tst["p_value"] < BREAK_ALPHA:
+            lo, hi = tst["post_ci95"]
+            if lo <= 1 + 1e-9 and hi >= 1 - 1e-9:
+                res.update(rule="floor", annual_factor=1.0, floor=True,
+                           reason=f"break in {tst['break_month']} (p={tst['p_value']:.3f}); no significant change since")
+            elif tst["post_annual_factor"] > 1:
+                res.update(rule="rising trend held flat", annual_factor=1.0, floor=False,
+                           reason=f"break in {tst['break_month']} (p={tst['p_value']:.3f}); rising since (x{tst['post_annual_factor']:.2f}/yr), held flat as a judgement call")
+            else:
+                res.update(rule="post-break rate", annual_factor=tst["post_annual_factor"], floor=False,
+                           reason=f"break in {tst['break_month']} (p={tst['p_value']:.3f}); still changing at x{tst['post_annual_factor']:.2f}/yr since")
+        elif tst:
+            lo, hi = tst["full_ci95"]
+            lo, hi = lo - 1e-9, hi + 1e-9
+            why = "no significant break" if tst.get("testable") else "too short to test for a break"
+            if lo <= 1 <= hi:
+                res.update(rule="no trend", annual_factor=1.0, floor=False, reason=f"{why}; full-history trend not significant")
+            elif tst["full_annual_factor"] < 1:
+                res.update(rule="full-history rate", annual_factor=tst["full_annual_factor"], floor=False, reason=f"{why}; full-history fit")
+            else:
+                res.update(rule="rising trend held flat", annual_factor=1.0, floor=False,
+                           reason=f"{why}; full-history trend rises (x{tst['full_annual_factor']:.2f}/yr), held flat as a judgement call")
+        else:
+            res.update(rule="no data", annual_factor=1.0, floor=False, reason="too short to fit")
+        # scenarios: fast = constant-capability (hedonic) decline unless the base is already steeper; slow = no change
+        res["scenario_annual_factors"] = {"base": res["annual_factor"], "fast": min(res["annual_factor"], hed_factor), "slow": 1.0}
+        res["anchor_month"] = f"{upto:%Y-%m}"
+        out[tier] = res
+    return out
+
+
+def project_base(b: dict, start: pd.Timestamp, months: int) -> pd.DataFrame:
+    ks = np.arange(months + 1)
+    return pd.DataFrame({"month": [start + pd.DateOffset(months=int(k)) for k in ks], "months_ahead": ks,
+                         **{sc: b["base_price"] * f ** (ks / 12) for sc, f in b["scenario_annual_factors"].items()}})
+
+
+def rolling_rates(idx: pd.DataFrame, windows=(6, 12)) -> pd.DataFrame:
+    """Annual price factor from a log-linear fit over each trailing window (only full windows)."""
+    rows = []
+    for tier in TIER_NAMES:
+        d = idx[(idx.tier == tier) & idx.used].sort_values("month").reset_index(drop=True)
+        for w in windows:
+            for i in range(w - 1, len(d)):
+                win = d.iloc[i - w + 1:i + 1]
+                if months_between(win.month.iloc[0], win.month.iloc[-1]) != w - 1:
+                    continue  # gap in the series
+                b = sm.OLS(np.log(win.index_price.to_numpy()), sm.add_constant(win.t.to_numpy())).fit().params[1]
+                rows.append({"month": d.month.iloc[i], "tier": tier, "window_months": w, "annual_factor": float(np.exp(b))})
+    return pd.DataFrame(rows)
+
+
+def chart_rolling(rr: pd.DataFrame, tests: dict, path):
+    tiers = [t for t in TIER_NAMES[::-1] if t in set(rr.tier)]
+    fig, axes = plt.subplots(1, len(tiers), figsize=(3.1 * len(tiers), 3.9), dpi=150, sharey=True)
+    for ax, tier in zip(np.atleast_1d(axes), tiers):
+        c = COLORS[tier]
+        for w, ls in ((12, "-"), (6, ":")):
+            d = rr[(rr.tier == tier) & (rr.window_months == w)]
+            ax.plot(d.month, d.annual_factor.clip(1e-3, 1e3), color=c, lw=1.8 if w == 12 else 1.2, ls=ls, label=f"{w}-month window")
+        ax.axhline(1, color=INK2, lw=0.8)
+        tst = tests.get(tier, {})
+        if tst.get("testable"):
+            ax.axvline(pd.Timestamp(tst["break_month"]), color=INK2, lw=0.8, ls="--")
+        sub = f"break {tst['break_month']}, p={tst['p_value']:.3f}" if tst.get("testable") else "too short to test"
+        style(ax, f"{tier}\n{sub}", ylabel="Annual price factor (log; 1 = flat)" if ax is np.atleast_1d(axes)[0] else "")
+        ax.title.set_fontsize(10)
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"×{v:g}"))
+        ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1]))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    np.atleast_1d(axes)[0].legend(frameon=False, fontsize=8, labelcolor=INK2, loc="lower left")
+    fig.suptitle("Rolling decline rate by tier (below 1 = prices falling; dashed line = most likely break month)",
+                 x=0.01, ha="left", fontsize=12, color=INK)
+    fig.tight_layout(); fig.savefig(path); plt.close(fig)
+
+
 # ---------------------------------------------------------------- diagnostics
 
 
@@ -370,16 +588,18 @@ def chart_history(p, idx, fits, path):
             pts = p[p.tier == tier]
             ax.scatter(pts.month, pts.blended, s=8, color=c, alpha=0.18, lw=0, zorder=1)
         d = idx[(idx.tier == tier) & idx.used]
-        ax.plot(d.month, d.index_price, color=c, lw=2, marker="o", ms=4, zorder=3, label=f"{tier} — {INDEX_LABEL}")
+        lab = INDEX_LABEL if tier.startswith("eci>=") or VERSION == "v0" else "median of recent models"
+        ax.plot(d.month, d.index_price, color=c, lw=2, marker="o", ms=4, zorder=3, label=f"{tier} — {lab}")
         f = fits.get(tier)
-        if VERSION == "v2" and len(d):
+        if VERSION in ("v2", "v3") and len(d):
             labels.append((d.month.iloc[-1] + pd.Timedelta(days=12), d.index_price.iloc[-1], f"{tier}: {usd(d.index_price.iloc[-1])}"))
         elif f:
             ax.plot(d.month, np.exp(f["res"].fittedvalues), color=c, lw=1.2, ls="--", zorder=2)
             labels.append((d.month.iloc[-1] + pd.Timedelta(days=12), d.index_price.iloc[-1], f"{tier}: {rate_label(f['falls_x_per_year'])}"))
     style(ax, "Token price by capability tier (dots: individual models; dashed: log-linear fit)" if VERSION == "v0"
           else "Cheapest model at or above each ECI threshold (dashed: log-linear fit)" if VERSION == "v1"
-          else "Cheapest model at or above each ECI threshold")
+          else "Cheapest model at or above each ECI threshold" if VERSION == "v2"
+          else "Frontier and mid tiers (median price) and cheapest model at each ECI threshold")
     end_labels(ax, labels)
     legend_below(ax)
     fig.tight_layout(); fig.savefig(path); plt.close(fig)
@@ -417,11 +637,12 @@ def chart_forward(idx, fits, curve, path):
             ax.plot(cv.index, cv.decline, color=c, lw=1.2, ls="--")
         else:
             ax.fill_between(cv.index, cv.slow, cv.fast, color=c, alpha=0.15, lw=0)
-            ax.plot(cv.index, cv.base, color=c, lw=2, ls="--")
+            ax.plot(cv.index, cv.base, color=c, lw=2, ls="--" if VERSION != "v3" else "-")
         labels.append((cv.index[-1] + pd.Timedelta(days=12), cv.base.iloc[-1], f"{tier}: {usd(cv.base.iloc[-1])}"))
     ax.axvline(pd.Timestamp(next(f for f in fits.values() if f)["anchor_month"]), color=INK2, lw=0.8, ls=":")
-    style(ax, f"Forward curve {VERSION}: base (dashed) with slow–fast scenario band, 36 months" if VERSION != "v2" else
-          "Forward curve v2: base = no change (solid); decline resumes (dashed); shaded down to fast decline")
+    style(ax, {"v2": "Forward curve v2: base = no change (solid); decline resumes (dashed); shaded down to fast decline",
+               "v3": "Forward curve v3: base case per tier (solid); shaded from no change down to the hedonic decline"}.get(
+        VERSION, f"Forward curve {VERSION}: base (dashed) with slow–fast scenario band, 36 months"))
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: usd(v)))
     end_labels(ax, labels)
     legend_below(ax)
@@ -455,17 +676,21 @@ def chart_backtest(idx, bt, path):
 def main() -> int:
     global VERSION, TIER_NAMES, COLORS, INDEX_LABEL, ECI_THRESHOLDS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--version", choices=["v0", "v1", "v2"], default="v2")
+    ap.add_argument("--version", choices=["v0", "v1", "v2", "v3"], default="v3")
     VERSION = ap.parse_args().version
-    if VERSION == "v2":
+    if VERSION in ("v2", "v3"):
         ECI_THRESHOLDS = V2_THRESHOLDS
     TIER_NAMES = [n for n, _, _ in TIERS] if VERSION == "v0" else [f"eci>={t}" for t in ECI_THRESHOLDS]
     COLORS = dict(zip(TIER_NAMES, PALETTE))
+    if VERSION == "v3":
+        TIER_NAMES += [n for n, _, _ in GAP_TIERS]
+        COLORS.update(GAP_COLORS)
     INDEX_LABEL = "monthly median" if VERSION == "v0" else "cheapest model"
-    make_index = tier_index if VERSION == "v0" else band_index
+    make_index = (tier_index if VERSION == "v0" else band_index if VERSION != "v3"
+                  else lambda q: pd.concat([band_index(q), gap_tier_index(q)], ignore_index=True))
     OUT.mkdir(parents=True, exist_ok=True)
     REP.mkdir(exist_ok=True)
-    panel = build_panel()
+    panel = build_panel(ref_provider=VERSION == "v3")
     p = assign_tiers(panel)
     last = p.month.max()
 
@@ -485,7 +710,7 @@ def main() -> int:
     cutoff = last - pd.DateOffset(months=BACKTEST_MONTHS)
     bt, v2 = {}, {}
     rows = []
-    if VERSION != "v2":
+    if VERSION in ("v0", "v1"):
         # forward curve: each tier's own fitted rate
         for tier, f in fits.items():
             if not f:
@@ -504,7 +729,7 @@ def main() -> int:
             if sc_:
                 bt[tier] = {"projection": pr, "fit_window": f"{f['first_month']}..{f['last_month']}",
                             "train_annual_factor": f["annual_factor"], **sc_}
-    else:
+    elif VERSION == "v2":
         # forward curve. Published base case = no change (it beat every fitted forecast in the backtests).
         # The rate-plus-lag model supplies the "decline resumes" scenarios.
         proj, info, fmeta = lag_forecast(idx, last, HORIZON)
@@ -547,6 +772,46 @@ def main() -> int:
                                    "by_phase": {ph: summarise(h) for ph, h in g.groupby("phase")}}
                              for var, g in roll.groupby("variant")}}}
         roll.to_csv(REP / f"curve_{VERSION}_rolling_backtest.csv", index=False)
+    else:
+        # v3: base case per tier from the floor (structural-break) test
+        rng = np.random.default_rng(0)
+        tests = {t: floor_test(idx[(idx.tier == t) & idx.used], rng) for t in TIER_NAMES
+                 if len(idx[(idx.tier == t) & idx.used]) >= BREAK_MIN_SIDE}
+        bases = base_cases(p, idx, tests, last, hed["annual_factor"])
+        for tier, b in bases.items():
+            pr = project_base(b, last, HORIZON)
+            for sc in ("base", "fast", "slow"):
+                rows.append(pr.assign(tier=tier, scenario=sc, blended_price_per_mtok=pr[sc], annual_factor=b["scenario_annual_factors"][sc])
+                            [["month", "months_ahead", "tier", "scenario", "blended_price_per_mtok", "annual_factor"]])
+        fwd_fits = bases
+        # backtests: the same rule, run on data up to 12 and 6 months ago
+        bt_runs = {}
+        for horizon in (BACKTEST_MONTHS, 6):
+            c = last - pd.DateOffset(months=horizon)
+            idx_bt, p_bt = idx[idx.month <= c], p[p.month <= c]
+            tests_bt = {t: floor_test(idx_bt[(idx_bt.tier == t) & idx_bt.used], rng) for t in TIER_NAMES
+                        if len(idx_bt[(idx_bt.tier == t) & idx_bt.used]) >= BREAK_MIN_SIDE}
+            bases_bt = base_cases(p_bt, idx_bt, tests_bt, c, fit_hedonic(p_bt)[1]["annual_factor"])
+            run = {}
+            for tier, b in bases_bt.items():
+                pr = project_base(b, c, horizon)
+                sc_ = score(pr, actual(tier), b["base_price"])
+                if sc_:
+                    latest = score(pr.assign(base=b["latest_price"]), actual(tier), b["latest_price"])
+                    run[tier] = {"projection": pr, **{k: v for k, v in b.items() if k != "scenario_annual_factors"}, **sc_,
+                                 "latest_month_no_change_mean_abs_log_error_pct": latest["mean_abs_log_error_pct"]}
+            bt_runs[horizon] = {"cutoff": f"{c:%Y-%m}", "floor_tests": tests_bt, "tiers": run}
+        bt = bt_runs[BACKTEST_MONTHS]["tiers"]
+        tests_bt, bases_bt = bt_runs[BACKTEST_MONTHS]["floor_tests"], None
+        rr = rolling_rates(idx)
+        rr.assign(month=rr.month.dt.strftime("%Y-%m")).to_csv(REP / f"curve_{VERSION}_rolling_rates.csv", index=False)
+        latest_rr = rr.sort_values("month").groupby(["tier", "window_months"]).annual_factor.last().unstack()
+        v2 = {"floor_tests": tests, "base_cases": bases,
+              "backtests": {f"{h}m": {"cutoff": r["cutoff"], "floor_tests": r["floor_tests"],
+                                      "tiers": {t: {k: v for k, v in x.items() if k != "projection"} for t, x in r["tiers"].items()}}
+                            for h, r in bt_runs.items()},
+              "rolling_latest": {t: {f"{w}m": float(r[w]) for w in latest_rr.columns if pd.notna(r[w])} for t, r in latest_rr.iterrows()},
+              "hedonic_annual_factor": hed["annual_factor"]}
     curve = pd.concat(rows, ignore_index=True)
     curve = curve[curve.months_ahead > 0]
 
@@ -576,13 +841,20 @@ def main() -> int:
         "version": VERSION, "index": INDEX_LABEL, "generated_from_month": f"{last:%Y-%m}", "units": "USD per 1M tokens, blended 3:1 input:output",
         "tiers": ({n: f"ECI >= {lo:.0%} of best model that month" if n == "frontier" else f"{lo:.0%}-{hi:.0%} of best" if lo else f"< {hi:.0%} of best"
                    for n, lo, hi in TIERS} if VERSION == "v0" else
-                  {f"eci>={t}": f"cheapest model with Epoch ECI >= {t}" for t in ECI_THRESHOLDS}),
+                  {**{f"eci>={t}": f"cheapest model with Epoch ECI >= {t}" for t in ECI_THRESHOLDS},
+                   **({n: f"median price of models {lo}-{hi} ECI points below the best priced model that month, released in the last {GAP_TIER_MAX_AGE} months"
+                       for n, lo, hi in GAP_TIERS} if VERSION == "v3" else {})}),
         "scenarios": ({"base": "fitted log-linear rate", "fast": "steeper of 95% CI bound and last-12-month rate",
-                       "slow": "shallower 95% CI bound"} if VERSION != "v2" else
+                       "slow": "shallower 95% CI bound"} if VERSION in ("v0", "v1") else
+                      {"base": "per tier: flat where a floor is supported by the break test, else the fitted rate (see base_case.reason)",
+                       "fast": f"constant-capability (hedonic) decline, x{hed['annual_factor']:.2f}/yr, unless the base is steeper",
+                       "slow": "no change from the base price"} if VERSION == "v3" else
                       {"base": "no change: latest monthly price held flat (beat every fitted forecast in the backtests)",
                        "decline": f"decline resumes: {TIER_NAMES[0]} fitted rate for every band; bands not yet near the band below step down after the median observed catch-up lag",
                        "fast_decline": "steeper of the rate's 95% CI bound and its last-12-month rate; shortest observed catch-up lag"}),
-        "anchor": f"geometric mean of last {ANCHOR_MONTHS} monthly index values" if VERSION != "v2" else "latest monthly index value",
+        "anchor": ("latest monthly index value" if VERSION == "v2" else
+                   f"median of the last {BASE_MEDIAN_MONTHS} months: the current cheapest model's own price for bands, the tier index for mid and frontier"
+                   if VERSION == "v3" else f"geometric mean of last {ANCHOR_MONTHS} monthly index values"),
     }
     js = {"meta": meta, "tiers": {}}
     for tier, f in fwd_fits.items():
@@ -591,7 +863,7 @@ def main() -> int:
         cv = curve[curve.tier == tier].pivot(index="month", columns="scenario", values="blended_price_per_mtok")
         hist = idx[(idx.tier == tier) & idx.used]
         js["tiers"][tier] = {
-            "fit" if VERSION != "v2" else "forecast_state": {k: v for k, v in strip(f).items() if k not in ("scenario_log_slopes",)},
+            {"v2": "forecast_state", "v3": "base_case"}.get(VERSION, "fit"): {k: v for k, v in strip(f).items() if k not in ("scenario_log_slopes",)},
             "history": [{"month": f"{r.month:%Y-%m}", "index_price": round(r.index_price, 6), "n_models": int(r.n_models)} for r in hist.itertuples()],
             "forecast": [{"month": f"{m:%Y-%m}", **{k: round(float(r[k]), 6) for k in cv.columns}} for m, r in cv.iterrows()],
         }
@@ -599,7 +871,7 @@ def main() -> int:
 
     results = {"hedonic": hed, "tiers": {t: strip(f) for t, f in fits.items() if f},
                "backtest": {t: {k: v for k, v in b.items() if k != "projection"} for t, b in bt.items()},
-               "backtest_cutoff": f"{cutoff:%Y-%m}", **({"v2": v2} if v2 else {}),
+               "backtest_cutoff": f"{cutoff:%Y-%m}", **({VERSION: v2} if v2 else {}),
                "panel": {"model_months": int(len(panel)), "models": int(panel.canonical_id.nunique()),
                          "model_months_with_eci": int(len(p)), "models_with_eci": int(p.canonical_id.nunique()),
                          "first_month": f"{panel.month.min():%Y-%m}", "last_month": f"{last:%Y-%m}",
@@ -613,6 +885,8 @@ def main() -> int:
     chart_hedonic(p, hed_res, hed, REP / f"curve_{VERSION}_hedonic.png")
     chart_forward(idx, fwd_fits, curve, REP / f"curve_{VERSION}_forward.png")
     chart_backtest(idx, bt, REP / f"curve_{VERSION}_backtest.png")
+    if VERSION == "v3":
+        chart_rolling(rr, tests, REP / f"curve_{VERSION}_rolling_rates.png")
 
     print(json.dumps({k: results[k] for k in ("panel", "tier_months_used", "n_outlier_models", "n_repricing_events")}, indent=1, default=str))
     print("hedonic:", {k: hed[k] for k in ("falls_x_per_year", "falls_x_per_year_ci95", "r_squared", "eci_coef", "n_obs")})
@@ -621,7 +895,7 @@ def main() -> int:
             print(t, {k: f[k] for k in ("falls_x_per_year", "falls_x_per_year_ci95", "r_squared", "n_months", "last12_annual_factor", "scenario_annual_factors", "anchor_price")})
     for t, b in results["backtest"].items():
         print("bt", t, b)
-    if v2:
+    if v2 and VERSION == "v2":
         print(json.dumps({k: v2[k] for k in ("forecast_meta", "rolling")}, indent=1, default=str))
     print("sens hedonic recent:", {k: hed_recent[k] for k in ("falls_x_per_year", "falls_x_per_year_ci95", "r_squared", "n_obs")})
     print("sens hedonic launch:", {k: hed_launch[k] for k in ("falls_x_per_year", "falls_x_per_year_ci95", "r_squared", "n_obs")})

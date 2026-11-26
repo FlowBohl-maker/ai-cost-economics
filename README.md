@@ -110,24 +110,47 @@ includes it.
 ## Token price curve
 
 ```bash
-uv run python scripts/build_curve.py              # v2 (default)
-uv run python scripts/build_curve.py --version v1 # or v0; earlier versions still reproduce
+uv run python scripts/build_curve.py              # v3 (default, the published curve)
+uv run python scripts/build_curve.py --version v2 # or v0, v1; earlier versions still reproduce
 ```
 
 Reads `price_history.parquet`, `prices.parquet`, `model_map.csv` and `models.csv`. Builds a monthly
-blended price (3:1 input:output, USD per 1M tokens) per model, then an index per capability band: the
-cheapest model with Epoch ECI ≥ 120, 130, 140, 150 and 160.
+blended price per model (3:1 input:output, USD per 1M tokens), then an index per tier:
+
+| Tier | What it measures |
+|---|---|
+| `frontier` | Median price of models within 5 ECI points of the best model priced that month (released in the last 12 months) |
+| `mid` | The same, for models 5–15 ECI points below the best |
+| `eci>=120` … `eci>=160` | Cheapest model with Epoch ECI at or above the threshold |
+
+A hosted model's price comes from one **reference provider**, chosen as the provider with the longest
+price history for that model, not from the median across providers. The maker's own price is used
+where one exists.
+
+**Base case per tier.** A structural-break test checks whether prices have hit a floor:
+- **Floor supported:** the base is flat.
+- **Otherwise:** the base follows the fitted decline.
+- **Rising trend:** the base is held flat; it never projects a rise.
+- **Bands priced by the same model:** they share a base case.
+
+The base level is a 3-month median.
+
+Base case as of 2026-11:
+
+| Tier | Base level | Base case |
+|---|---|---|
+| frontier | about $9 | flat |
+| mid | about $4 | flat |
+| ECI ≥ 140 to ≥ 160 | $0.20 | ÷1.3 per year |
+| ECI ≥ 120 and ≥ 130 | $0.0875 | flat (floor since Sep 2025) |
 
 | file | content |
 |---|---|
-| `data/curves/curve_v2.csv`, `.json` | 36-month forward curve per band. Scenarios: `base` = no change (the published base case), `decline` = the 2024–25 decline resumes (÷1.7 per year), `fast_decline`. The JSON adds history and per-band state, for the website. |
-| `data/curves/tier_history_v2.csv` | Monthly index per band with the cheapest model behind it. |
-| `data/curves/panel_v2.parquet` | Model-month panel the indices are built from. |
-| `reports/curve_v2.md` | Method, results, backtests, judgement calls, limitations. Also `curve_v0.md` and `curve_v1.md`. |
-| `reports/curve_v2_*.png`, `_results.json`, `_rolling_backtest.csv` | Charts, all reported numbers, backtest errors. |
-
-"No change" is the base case because it beat every fitted trend in the backtests. See
-`reports/curve_v2.md`.
+| `data/curves/curve_v3.csv`, `.json` | 36-month forward curve per tier. Scenarios: `base` (rule above), `fast` = constant-capability decline (÷1.86 per year), `slow` = no change. The JSON adds history and each tier's base case with its reason, for the website. |
+| `data/curves/tier_history_v3.csv` | Monthly index per tier, with the cheapest model behind each band. |
+| `data/curves/panel_v3.parquet` | Model-month panel the indices are built from, with price source. |
+| `reports/curve_v3.md` | Method, floor tests, results, backtests, judgement calls, limitations. Also `curve_v0.md` to `curve_v2.md`. |
+| `reports/curve_v3_*.png`, `_results.json`, `_rolling_rates.csv` | Charts, all reported numbers, rolling decline rates. |
 
 ### Sources, licences and attribution
 
