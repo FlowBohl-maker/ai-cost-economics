@@ -1,0 +1,14 @@
+# Hand-reviewed mappings applied by scripts/build_history.py (they take precedence over automatic matching).
+# One row per source ID. Reviewed 2026-11-26.
+source,source_id,canonical_id,note
+epoch,Gemma 2 27B,google/gemma-2-27b-it,reviewed: Epoch name omits -it
+epoch,Gemma 3 27B,google/gemma-3-27b-it,reviewed: Epoch name omits -it
+epoch,Qwen2.5-72B,qwen/qwen-2p5-72b,reviewed: LiteLLM writes 2.5 as 2p5
+epoch,Qwen2.5-Coder-0.5B,qwen/qwen-2p5-coder-0p5b,reviewed: LiteLLM writes 2.5 as 2p5
+epoch,Qwen2.5-Coder-3B,qwen/qwen-2p5-coder-3b,reviewed: LiteLLM writes 2.5 as 2p5
+epoch,Qwen2.5-Coder-14B,qwen/qwen-2p5-coder-14b,reviewed: LiteLLM writes 2.5 as 2p5
+epoch,Qwen2.5-Coder-32B,qwen/qwen-2p5-coder-32b,reviewed: LiteLLM writes 2.5 as 2p5
+epoch,Mistral Large 2 (Jul 2024),mistralai/mistral-large-2407,reviewed: Mistral Large 2 = 2407 release
+epoch,StarCoder 2 3B,bigcode/starcoder2-3b,reviewed
+epoch,StarCoder 2 7B,bigcode/starcoder2-7b,reviewed
+epoch,StarCoder 2 15B,bigcode/starcoder2-15b,reviewed

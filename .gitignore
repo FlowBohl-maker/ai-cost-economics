@@ -221,3 +221,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Downloaded source data / intermediates for the history build (re-created by scripts)
+.cache/
