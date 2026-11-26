@@ -107,6 +107,28 @@ includes it.
   whose names collapse to the same ID (several dated snapshots) are *not* attached
   (`ambiguous_epoch_variants`); fuzzy matches are listed for review.
 
+## Token price curve
+
+```bash
+uv run python scripts/build_curve.py              # v2 (default)
+uv run python scripts/build_curve.py --version v1 # or v0; earlier versions still reproduce
+```
+
+Reads `price_history.parquet`, `prices.parquet`, `model_map.csv` and `models.csv`. Builds a monthly
+blended price (3:1 input:output, USD per 1M tokens) per model, then an index per capability band: the
+cheapest model with Epoch ECI ≥ 120, 130, 140, 150 and 160.
+
+| file | content |
+|---|---|
+| `data/curves/curve_v2.csv`, `.json` | 36-month forward curve per band. Scenarios: `base` = no change (the published base case), `decline` = the 2024–25 decline resumes (÷1.7 per year), `fast_decline`. The JSON adds history and per-band state, for the website. |
+| `data/curves/tier_history_v2.csv` | Monthly index per band with the cheapest model behind it. |
+| `data/curves/panel_v2.parquet` | Model-month panel the indices are built from. |
+| `reports/curve_v2.md` | Method, results, backtests, judgement calls, limitations. Also `curve_v0.md` and `curve_v1.md`. |
+| `reports/curve_v2_*.png`, `_results.json`, `_rolling_backtest.csv` | Charts, all reported numbers, backtest errors. |
+
+"No change" is the base case because it beat every fitted trend in the backtests. See
+`reports/curve_v2.md`.
+
 ### Sources, licences and attribution
 
 | source | licence | attribution / caveats |

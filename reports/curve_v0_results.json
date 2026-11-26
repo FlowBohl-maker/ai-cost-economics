@@ -1,0 +1,387 @@
+{
+ "hedonic": {
+  "annual_factor": 0.5336908863712739,
+  "annual_factor_ci95": [
+   0.40055883650737123,
+   0.7110714737421965
+  ],
+  "falls_x_per_year": 1.87374381975923,
+  "falls_x_per_year_ci95": [
+   1.4063283888147597,
+   2.4965121446811414
+  ],
+  "log_slope_per_year": -0.6279384721019354,
+  "log_slope_ci95": [
+   -0.9148946156297072,
+   -0.34098232857416366
+  ],
+  "eci_coef": 0.053518864971800716,
+  "eci_coef_ci95": [
+   0.043881135480986495,
+   0.06315659446261493
+  ],
+  "r_squared": 0.31918418541467675,
+  "n_obs": 1929,
+  "n_models": 164,
+  "se": "clustered by model",
+  "n_outlier_obs_excluded": 3
+ },
+ "tiers": {
+  "frontier": {
+   "annual_factor": 0.8140955168382048,
+   "annual_factor_ci95": [
+    0.6512210086529993,
+    1.0177059734404368
+   ],
+   "falls_x_per_year": 1.228357089944204,
+   "falls_x_per_year_ci95": [
+    0.9826020737791482,
+    1.5355769956937098
+   ],
+   "log_slope_per_year": -0.20567757731061848,
+   "log_slope_ci95": [
+    -0.4289062033691723,
+    0.01755104874793531
+   ],
+   "r_squared": 0.11752202243381016,
+   "n_months": 33,
+   "first_month": "2024-03",
+   "last_month": "2026-11",
+   "se": "Newey-West HAC, 3 lags",
+   "last12_log_slope_per_year": 0.21120887900474355,
+   "last12_annual_factor": 1.2351703292668248,
+   "scenario_log_slopes": {
+    "base": -0.20567757731061848,
+    "fast": -0.4289062033691723,
+    "slow": 0.01755104874793531
+   },
+   "scenario_annual_factors": {
+    "base": 0.8140955168382048,
+    "fast": 0.6512210086529993,
+    "slow": 1.0177059734404368
+   },
+   "anchor_month": "2026-11",
+   "anchor_price": 3.8029524607613916
+  },
+  "mid": {
+   "annual_factor": 1.4142926329150782,
+   "annual_factor_ci95": [
+    0.6196928176040666,
+    3.2277663944071153
+   ],
+   "falls_x_per_year": 0.7070672481259014,
+   "falls_x_per_year_ci95": [
+    0.30981176386641285,
+    1.6137027436695561
+   ],
+   "log_slope_per_year": 0.3466295000334217,
+   "log_slope_ci95": [
+    -0.4785313791989327,
+    1.171790379265776
+   ],
+   "r_squared": 0.06459851419929863,
+   "n_months": 31,
+   "first_month": "2024-05",
+   "last_month": "2026-11",
+   "se": "Newey-West HAC, 3 lags",
+   "last12_log_slope_per_year": 1.1758678908346694,
+   "last12_annual_factor": 3.240954518313645,
+   "scenario_log_slopes": {
+    "base": 0.3466295000334217,
+    "fast": -0.4785313791989327,
+    "slow": 1.171790379265776
+   },
+   "scenario_annual_factors": {
+    "base": 1.4142926329150782,
+    "fast": 0.6196928176040666,
+    "slow": 3.2277663944071153
+   },
+   "anchor_month": "2026-11",
+   "anchor_price": 1.0106357671792168
+  },
+  "small": {
+   "annual_factor": 1.488968026925863,
+   "annual_factor_ci95": [
+    1.2646756301182627,
+    1.7530390658355441
+   ],
+   "falls_x_per_year": 0.6716060935603898,
+   "falls_x_per_year_ci95": [
+    0.5704379437336577,
+    0.7907165886532405
+   ],
+   "log_slope_per_year": 0.39808328062099985,
+   "log_slope_ci95": [
+    0.2348156704196981,
+    0.5613508908223016
+   ],
+   "r_squared": 0.5711276586346745,
+   "n_months": 26,
+   "first_month": "2024-10",
+   "last_month": "2026-11",
+   "se": "Newey-West HAC, 3 lags",
+   "last12_log_slope_per_year": -0.07778340940960343,
+   "last12_annual_factor": 0.9251647868320735,
+   "scenario_log_slopes": {
+    "base": 0.39808328062099985,
+    "fast": -0.07778340940960343,
+    "slow": 0.5613508908223016
+   },
+   "scenario_annual_factors": {
+    "base": 1.488968026925863,
+    "fast": 0.9251647868320735,
+    "slow": 1.7530390658355441
+   },
+   "anchor_month": "2026-11",
+   "anchor_price": 0.25225087140767966
+  }
+ },
+ "backtest": {
+  "frontier": {
+   "fit_window": "2024-03..2025-11",
+   "train_annual_factor": 0.4968837958149697,
+   "months_compared": 12,
+   "mean_abs_log_error_pct": 177.16234292854676,
+   "bias_pct": -63.92006253685758,
+   "endpoint_month": "2026-11",
+   "endpoint_projected": 1.1175442613818243,
+   "endpoint_actual": 4.0,
+   "endpoint_error_pct": -72.06139346545439,
+   "share_within_band": 0.0,
+   "no_change_mean_abs_log_error_pct": 89.76040223767059
+  },
+  "mid": {
+   "fit_window": "2024-05..2025-11",
+   "train_annual_factor": 3.8497505694544096,
+   "months_compared": 12,
+   "mean_abs_log_error_pct": 68.49698065317979,
+   "bias_pct": 68.49698065317979,
+   "endpoint_month": "2026-11",
+   "endpoint_projected": 2.0753740767549855,
+   "endpoint_actual": 1.0957499999999998,
+   "endpoint_error_pct": 89.40215165457322,
+   "share_within_band": 0.9166666666666666,
+   "no_change_mean_abs_log_error_pct": 48.601259529796415
+  },
+  "small": {
+   "fit_window": "2024-10..2025-11",
+   "train_annual_factor": 1.6648736096796346,
+   "months_compared": 12,
+   "mean_abs_log_error_pct": 30.27452568184501,
+   "bias_pct": 17.944079487237463,
+   "endpoint_month": "2026-11",
+   "endpoint_projected": 0.3513639659331702,
+   "endpoint_actual": 0.26249999999999996,
+   "endpoint_error_pct": 33.852939403112494,
+   "share_within_band": 0.5,
+   "no_change_mean_abs_log_error_pct": 15.825098796208238
+  }
+ },
+ "backtest_cutoff": "2025-11",
+ "panel": {
+  "model_months": 17671,
+  "models": 1564,
+  "model_months_with_eci": 1929,
+  "models_with_eci": 164,
+  "first_month": "2023-10",
+  "last_month": "2026-11",
+  "price_source_share": {
+   "litellm_other": 0.532,
+   "litellm_first_party": 0.467,
+   "openrouter": 0.001
+  }
+ },
+ "tier_months_used": {
+  "frontier": {
+   "min": "2024-03-01",
+   "max": "2026-11-01",
+   "count": "33"
+  },
+  "mid": {
+   "min": "2024-05-01",
+   "max": "2026-11-01",
+   "count": "31"
+  },
+  "small": {
+   "min": "2024-10-01",
+   "max": "2026-11-01",
+   "count": "26"
+  }
+ },
+ "n_outlier_models": 1,
+ "n_repricing_events": 67,
+ "sensitivity": {
+  "hedonic_recent_only": {
+   "annual_factor": 0.22603429080203,
+   "annual_factor_ci95": [
+    0.15326076792912038,
+    0.33336320383051526
+   ],
+   "falls_x_per_year": 4.424107494715661,
+   "falls_x_per_year_ci95": [
+    2.999731189613862,
+    6.524827022023517
+   ],
+   "log_slope_per_year": -1.4870685620070418,
+   "log_slope_ci95": [
+    -1.87561444282265,
+    -1.0985226811914337
+   ],
+   "eci_coef": 0.10129372310400511,
+   "eci_coef_ci95": [
+    0.0831058555906043,
+    0.11948159061740593
+   ],
+   "r_squared": 0.3674268153378567,
+   "n_obs": 1441,
+   "n_models": 154,
+   "se": "clustered by model"
+  },
+  "hedonic_launch_price": {
+   "annual_factor": 0.4471651607698107,
+   "annual_factor_ci95": [
+    0.30871897533633735,
+    0.6476980586905798
+   ],
+   "falls_x_per_year": 2.236310177381584,
+   "falls_x_per_year_ci95": [
+    1.543929283996392,
+    3.239191886117589
+   ],
+   "log_slope_per_year": -0.8048272654313624,
+   "log_slope_ci95": [
+    -1.1753238808294877,
+    -0.43433065003323706
+   ],
+   "eci_coef": 0.06045858833532137,
+   "eci_coef_ci95": [
+    0.046835368422975775,
+    0.07408180824766696
+   ],
+   "r_squared": 0.38469302147410855,
+   "n_obs": 164,
+   "n_models": 164,
+   "se": "clustered by model"
+  },
+  "tiers_recent_only": {
+   "frontier": {
+    "annual_factor": 0.8140955168382048,
+    "annual_factor_ci95": [
+     0.6512210086529993,
+     1.0177059734404368
+    ],
+    "falls_x_per_year": 1.228357089944204,
+    "falls_x_per_year_ci95": [
+     0.9826020737791482,
+     1.5355769956937098
+    ],
+    "log_slope_per_year": -0.20567757731061848,
+    "log_slope_ci95": [
+     -0.4289062033691723,
+     0.01755104874793531
+    ],
+    "r_squared": 0.11752202243381016,
+    "n_months": 33,
+    "first_month": "2024-03",
+    "last_month": "2026-11",
+    "se": "Newey-West HAC, 3 lags",
+    "last12_log_slope_per_year": 0.21120887900474355,
+    "last12_annual_factor": 1.2351703292668248,
+    "scenario_log_slopes": {
+     "base": -0.20567757731061848,
+     "fast": -0.4289062033691723,
+     "slow": 0.01755104874793531
+    },
+    "scenario_annual_factors": {
+     "base": 0.8140955168382048,
+     "fast": 0.6512210086529993,
+     "slow": 1.0177059734404368
+    },
+    "anchor_month": "2026-11",
+    "anchor_price": 3.8029524607613916
+   },
+   "mid": {
+    "annual_factor": 1.3524006689214896,
+    "annual_factor_ci95": [
+     0.6011472770392308,
+     3.0424949744552086
+    ],
+    "falls_x_per_year": 0.7394258395313265,
+    "falls_x_per_year_ci95": [
+     0.32867761767759723,
+     1.6634858680974116
+    ],
+    "log_slope_per_year": 0.30188128646955026,
+    "log_slope_ci95": [
+     -0.5089153211577193,
+     1.1126778940968198
+    ],
+    "r_squared": 0.048365619370211665,
+    "n_months": 31,
+    "first_month": "2024-05",
+    "last_month": "2026-11",
+    "se": "Newey-West HAC, 3 lags",
+    "last12_log_slope_per_year": 1.2934361508150347,
+    "last12_annual_factor": 3.6452908292186383,
+    "scenario_log_slopes": {
+     "base": 0.30188128646955026,
+     "fast": -0.5089153211577193,
+     "slow": 1.1126778940968198
+    },
+    "scenario_annual_factors": {
+     "base": 1.3524006689214896,
+     "fast": 0.6011472770392308,
+     "slow": 3.0424949744552086
+    },
+    "anchor_month": "2026-11",
+    "anchor_price": 0.95284092843991
+   },
+   "small": {
+    "annual_factor": 1.3385374756967647,
+    "annual_factor_ci95": [
+     1.0653985937556307,
+     1.681701650767922
+    ],
+    "falls_x_per_year": 0.7470840511801571,
+    "falls_x_per_year_ci95": [
+     0.594635796155261,
+     0.9386158437424865
+    ],
+    "log_slope_per_year": 0.29157758186556715,
+    "log_slope_ci95": [
+     0.06334899557838763,
+     0.5198061681527466
+    ],
+    "r_squared": 0.22176882718542235,
+    "n_months": 25,
+    "first_month": "2024-10",
+    "last_month": "2026-11",
+    "se": "Newey-West HAC, 3 lags",
+    "last12_log_slope_per_year": -0.5543018289684881,
+    "last12_annual_factor": 0.5744732017654569,
+    "scenario_log_slopes": {
+     "base": 0.29157758186556715,
+     "fast": -0.5543018289684881,
+     "slow": 0.5198061681527466
+    },
+    "scenario_annual_factors": {
+     "base": 1.3385374756967647,
+     "fast": 0.5744732017654569,
+     "slow": 1.681701650767922
+    },
+    "anchor_month": "2026-11",
+    "anchor_price": 0.1707299923608225
+   }
+  },
+  "tiers_recent_only_months_used": {
+   "frontier": 33,
+   "mid": 31,
+   "small": 25
+  },
+  "tier_median_age_months_last": {
+   "frontier": 3.4,
+   "mid": 12.7,
+   "small": 27.3
+  }
+ }
+}
