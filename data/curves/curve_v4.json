@@ -1,0 +1,5610 @@
+{
+ "meta": {
+  "version": "v4",
+  "built_from": "curve_v3 (tiers, base levels, base-case rates)",
+  "generated_from_month": "2026-11",
+  "units": "USD per 1M tokens",
+  "token_types": {
+   "input": "uncached input (prompt) tokens",
+   "output": "output tokens; reasoning tokens are billed at this price",
+   "cache_read": "input tokens read from a prompt cache; priced as input where the source lists no cache-read price"
+  },
+  "blended": "75% input + 25% output, as in v3",
+  "months": "months_ahead 0 = the base level in the anchor month; 1-36 = forward curve",
+  "scenarios": {
+   "base": "v3 base case per tier",
+   "fast": "v3 fast (constant-capability decline unless the base is steeper)",
+   "slow": "no change"
+  },
+  "rate_by_type": "every token type moves at its tier's v3 annual factor (v3 fits rates on blended prices)",
+  "capability_lookup": "capability_v4.csv: cheapest model with ECI >= eci_min; scenario 'history' for past months; forward rate from the v3 band priced by the same model, else the nearest v3 band below"
+ },
+ "tiers": {
+  "eci>=120": {
+   "base": {
+    "input": 0.049999999999999996,
+    "output": 0.19999999999999998,
+    "cache_read": 0.049999999999999996,
+    "cache_read_listed": false,
+    "blended": 0.0875,
+    "v3_base_price": 0.0875,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": "openai/gpt-oss-20b",
+    "rule": "floor",
+    "reason": "break in 2025-09 (p=0.001); no significant change since",
+    "scenario_annual_factors": {
+     "base": 1.0,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 0.047478,
+     "output": 0.189912,
+     "cache_read": 0.047478
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 0.045083,
+     "output": 0.180333,
+     "cache_read": 0.045083
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 0.042809,
+     "output": 0.171237,
+     "cache_read": 0.042809
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 0.04065,
+     "output": 0.1626,
+     "cache_read": 0.04065
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 0.0386,
+     "output": 0.154399,
+     "cache_read": 0.0386
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 0.036653,
+     "output": 0.146611,
+     "cache_read": 0.036653
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 0.034804,
+     "output": 0.139216,
+     "cache_read": 0.034804
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 0.033049,
+     "output": 0.132194,
+     "cache_read": 0.033049
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 0.031382,
+     "output": 0.125526,
+     "cache_read": 0.031382
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 0.029799,
+     "output": 0.119195,
+     "cache_read": 0.029799
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 0.028296,
+     "output": 0.113183,
+     "cache_read": 0.028296
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 0.026869,
+     "output": 0.107474,
+     "cache_read": 0.026869
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 0.025513,
+     "output": 0.102053,
+     "cache_read": 0.025513
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.024226,
+     "output": 0.096906,
+     "cache_read": 0.024226
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.023004,
+     "output": 0.092018,
+     "cache_read": 0.023004
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.021844,
+     "output": 0.087377,
+     "cache_read": 0.021844
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.020742,
+     "output": 0.082969,
+     "cache_read": 0.020742
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.019696,
+     "output": 0.078784,
+     "cache_read": 0.019696
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.018703,
+     "output": 0.074811,
+     "cache_read": 0.018703
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.017759,
+     "output": 0.071037,
+     "cache_read": 0.017759
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.016864,
+     "output": 0.067454,
+     "cache_read": 0.016864
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.016013,
+     "output": 0.064052,
+     "cache_read": 0.016013
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.015205,
+     "output": 0.060821,
+     "cache_read": 0.015205
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.014438,
+     "output": 0.057753,
+     "cache_read": 0.014438
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.01371,
+     "output": 0.05484,
+     "cache_read": 0.01371
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.013019,
+     "output": 0.052074,
+     "cache_read": 0.013019
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.012362,
+     "output": 0.049448,
+     "cache_read": 0.012362
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.011738,
+     "output": 0.046954,
+     "cache_read": 0.011738
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.011146,
+     "output": 0.044585,
+     "cache_read": 0.011146
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.010584,
+     "output": 0.042336,
+     "cache_read": 0.010584
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.01005,
+     "output": 0.040201,
+     "cache_read": 0.01005
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.009543,
+     "output": 0.038173,
+     "cache_read": 0.009543
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.009062,
+     "output": 0.036248,
+     "cache_read": 0.009062
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.008605,
+     "output": 0.03442,
+     "cache_read": 0.008605
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.008171,
+     "output": 0.032683,
+     "cache_read": 0.008171
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.007759,
+     "output": 0.031035,
+     "cache_read": 0.007759
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    }
+   ]
+  },
+  "eci>=130": {
+   "base": {
+    "input": 0.049999999999999996,
+    "output": 0.19999999999999998,
+    "cache_read": 0.049999999999999996,
+    "cache_read_listed": false,
+    "blended": 0.0875,
+    "v3_base_price": 0.0875,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": "openai/gpt-oss-20b",
+    "rule": "same model",
+    "reason": "priced by the same model as eci>=120; takes its base case",
+    "scenario_annual_factors": {
+     "base": 1.0,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 0.047478,
+     "output": 0.189912,
+     "cache_read": 0.047478
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 0.045083,
+     "output": 0.180333,
+     "cache_read": 0.045083
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 0.042809,
+     "output": 0.171237,
+     "cache_read": 0.042809
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 0.04065,
+     "output": 0.1626,
+     "cache_read": 0.04065
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 0.0386,
+     "output": 0.154399,
+     "cache_read": 0.0386
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 0.036653,
+     "output": 0.146611,
+     "cache_read": 0.036653
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 0.034804,
+     "output": 0.139216,
+     "cache_read": 0.034804
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 0.033049,
+     "output": 0.132194,
+     "cache_read": 0.033049
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 0.031382,
+     "output": 0.125526,
+     "cache_read": 0.031382
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 0.029799,
+     "output": 0.119195,
+     "cache_read": 0.029799
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 0.028296,
+     "output": 0.113183,
+     "cache_read": 0.028296
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 0.026869,
+     "output": 0.107474,
+     "cache_read": 0.026869
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 0.025513,
+     "output": 0.102053,
+     "cache_read": 0.025513
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.024226,
+     "output": 0.096906,
+     "cache_read": 0.024226
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.023004,
+     "output": 0.092018,
+     "cache_read": 0.023004
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.021844,
+     "output": 0.087377,
+     "cache_read": 0.021844
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.020742,
+     "output": 0.082969,
+     "cache_read": 0.020742
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.019696,
+     "output": 0.078784,
+     "cache_read": 0.019696
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.018703,
+     "output": 0.074811,
+     "cache_read": 0.018703
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.017759,
+     "output": 0.071037,
+     "cache_read": 0.017759
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.016864,
+     "output": 0.067454,
+     "cache_read": 0.016864
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.016013,
+     "output": 0.064052,
+     "cache_read": 0.016013
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.015205,
+     "output": 0.060821,
+     "cache_read": 0.015205
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.014438,
+     "output": 0.057753,
+     "cache_read": 0.014438
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.01371,
+     "output": 0.05484,
+     "cache_read": 0.01371
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.013019,
+     "output": 0.052074,
+     "cache_read": 0.013019
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.012362,
+     "output": 0.049448,
+     "cache_read": 0.012362
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.011738,
+     "output": 0.046954,
+     "cache_read": 0.011738
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.011146,
+     "output": 0.044585,
+     "cache_read": 0.011146
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.010584,
+     "output": 0.042336,
+     "cache_read": 0.010584
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.01005,
+     "output": 0.040201,
+     "cache_read": 0.01005
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.009543,
+     "output": 0.038173,
+     "cache_read": 0.009543
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.009062,
+     "output": 0.036248,
+     "cache_read": 0.009062
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.008605,
+     "output": 0.03442,
+     "cache_read": 0.008605
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.008171,
+     "output": 0.032683,
+     "cache_read": 0.008171
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.007759,
+     "output": 0.031035,
+     "cache_read": 0.007759
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 0.05,
+     "output": 0.2,
+     "cache_read": 0.05
+    }
+   ]
+  },
+  "eci>=140": {
+   "base": {
+    "input": 0.09999999999999999,
+    "output": 0.5,
+    "cache_read": 0.01,
+    "cache_read_listed": true,
+    "blended": 0.2,
+    "v3_base_price": 0.2,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": "anthropic/claude-haiku-5-5",
+    "rule": "post-break rate",
+    "reason": "break in 2025-09 (p=0.001); still changing at x0.78/yr since",
+    "scenario_annual_factors": {
+     "base": 0.7779224731665425,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 0.097929,
+     "output": 0.489645,
+     "cache_read": 0.009793
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 0.095901,
+     "output": 0.479505,
+     "cache_read": 0.00959
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 0.093915,
+     "output": 0.469574,
+     "cache_read": 0.009391
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 0.09197,
+     "output": 0.459849,
+     "cache_read": 0.009197
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 0.090065,
+     "output": 0.450326,
+     "cache_read": 0.009007
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 0.0882,
+     "output": 0.441,
+     "cache_read": 0.00882
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 0.086373,
+     "output": 0.431867,
+     "cache_read": 0.008637
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 0.084585,
+     "output": 0.422923,
+     "cache_read": 0.008458
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 0.082833,
+     "output": 0.414164,
+     "cache_read": 0.008283
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 0.081117,
+     "output": 0.405587,
+     "cache_read": 0.008112
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 0.079437,
+     "output": 0.397187,
+     "cache_read": 0.007944
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 0.077792,
+     "output": 0.388961,
+     "cache_read": 0.007779
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 0.076181,
+     "output": 0.380906,
+     "cache_read": 0.007618
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 0.074603,
+     "output": 0.373017,
+     "cache_read": 0.00746
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 0.073058,
+     "output": 0.365292,
+     "cache_read": 0.007306
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 0.071545,
+     "output": 0.357727,
+     "cache_read": 0.007155
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 0.070064,
+     "output": 0.350319,
+     "cache_read": 0.007006
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 0.068613,
+     "output": 0.343063,
+     "cache_read": 0.006861
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 0.067192,
+     "output": 0.335959,
+     "cache_read": 0.006719
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 0.0658,
+     "output": 0.329001,
+     "cache_read": 0.00658
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 0.064437,
+     "output": 0.322187,
+     "cache_read": 0.006444
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 0.063103,
+     "output": 0.315515,
+     "cache_read": 0.00631
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 0.061796,
+     "output": 0.308981,
+     "cache_read": 0.00618
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 0.060516,
+     "output": 0.302582,
+     "cache_read": 0.006052
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 0.059263,
+     "output": 0.296315,
+     "cache_read": 0.005926
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 0.058036,
+     "output": 0.290179,
+     "cache_read": 0.005804
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 0.056834,
+     "output": 0.284169,
+     "cache_read": 0.005683
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 0.055657,
+     "output": 0.278284,
+     "cache_read": 0.005566
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 0.054504,
+     "output": 0.272521,
+     "cache_read": 0.00545
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 0.053375,
+     "output": 0.266877,
+     "cache_read": 0.005338
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 0.05227,
+     "output": 0.26135,
+     "cache_read": 0.005227
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 0.051187,
+     "output": 0.255937,
+     "cache_read": 0.005119
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 0.050127,
+     "output": 0.250637,
+     "cache_read": 0.005013
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 0.049089,
+     "output": 0.245446,
+     "cache_read": 0.004909
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 0.048073,
+     "output": 0.240363,
+     "cache_read": 0.004807
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 0.047077,
+     "output": 0.235385,
+     "cache_read": 0.004708
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 0.094956,
+     "output": 0.47478,
+     "cache_read": 0.009496
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 0.090167,
+     "output": 0.450833,
+     "cache_read": 0.009017
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 0.085619,
+     "output": 0.428093,
+     "cache_read": 0.008562
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 0.0813,
+     "output": 0.406501,
+     "cache_read": 0.00813
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 0.077199,
+     "output": 0.385997,
+     "cache_read": 0.00772
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 0.073306,
+     "output": 0.366528,
+     "cache_read": 0.007331
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 0.069608,
+     "output": 0.34804,
+     "cache_read": 0.006961
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 0.066097,
+     "output": 0.330485,
+     "cache_read": 0.00661
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 0.062763,
+     "output": 0.313816,
+     "cache_read": 0.006276
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 0.059597,
+     "output": 0.297987,
+     "cache_read": 0.00596
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 0.056591,
+     "output": 0.282957,
+     "cache_read": 0.005659
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 0.053737,
+     "output": 0.268685,
+     "cache_read": 0.005374
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 0.051027,
+     "output": 0.255133,
+     "cache_read": 0.005103
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.048453,
+     "output": 0.242264,
+     "cache_read": 0.004845
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.046009,
+     "output": 0.230045,
+     "cache_read": 0.004601
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.043688,
+     "output": 0.218441,
+     "cache_read": 0.004369
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.041485,
+     "output": 0.207423,
+     "cache_read": 0.004148
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.039392,
+     "output": 0.196961,
+     "cache_read": 0.003939
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.037405,
+     "output": 0.187026,
+     "cache_read": 0.003741
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.035519,
+     "output": 0.177593,
+     "cache_read": 0.003552
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.033727,
+     "output": 0.168635,
+     "cache_read": 0.003373
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.032026,
+     "output": 0.16013,
+     "cache_read": 0.003203
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.030411,
+     "output": 0.152053,
+     "cache_read": 0.003041
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.028877,
+     "output": 0.144383,
+     "cache_read": 0.002888
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.02742,
+     "output": 0.137101,
+     "cache_read": 0.002742
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.026037,
+     "output": 0.130186,
+     "cache_read": 0.002604
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.024724,
+     "output": 0.123619,
+     "cache_read": 0.002472
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.023477,
+     "output": 0.117384,
+     "cache_read": 0.002348
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.022293,
+     "output": 0.111463,
+     "cache_read": 0.002229
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.021168,
+     "output": 0.105841,
+     "cache_read": 0.002117
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.0201,
+     "output": 0.100502,
+     "cache_read": 0.00201
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.019087,
+     "output": 0.095433,
+     "cache_read": 0.001909
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.018124,
+     "output": 0.09062,
+     "cache_read": 0.001812
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.01721,
+     "output": 0.086049,
+     "cache_read": 0.001721
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.016342,
+     "output": 0.081709,
+     "cache_read": 0.001634
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.015517,
+     "output": 0.077587,
+     "cache_read": 0.001552
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    }
+   ]
+  },
+  "eci>=150": {
+   "base": {
+    "input": 0.09999999999999999,
+    "output": 0.5,
+    "cache_read": 0.01,
+    "cache_read_listed": true,
+    "blended": 0.2,
+    "v3_base_price": 0.2,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": "anthropic/claude-haiku-5-5",
+    "rule": "same model",
+    "reason": "priced by the same model as eci>=140; takes its base case",
+    "scenario_annual_factors": {
+     "base": 0.7779224731665425,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 0.097929,
+     "output": 0.489645,
+     "cache_read": 0.009793
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 0.095901,
+     "output": 0.479505,
+     "cache_read": 0.00959
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 0.093915,
+     "output": 0.469574,
+     "cache_read": 0.009391
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 0.09197,
+     "output": 0.459849,
+     "cache_read": 0.009197
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 0.090065,
+     "output": 0.450326,
+     "cache_read": 0.009007
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 0.0882,
+     "output": 0.441,
+     "cache_read": 0.00882
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 0.086373,
+     "output": 0.431867,
+     "cache_read": 0.008637
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 0.084585,
+     "output": 0.422923,
+     "cache_read": 0.008458
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 0.082833,
+     "output": 0.414164,
+     "cache_read": 0.008283
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 0.081117,
+     "output": 0.405587,
+     "cache_read": 0.008112
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 0.079437,
+     "output": 0.397187,
+     "cache_read": 0.007944
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 0.077792,
+     "output": 0.388961,
+     "cache_read": 0.007779
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 0.076181,
+     "output": 0.380906,
+     "cache_read": 0.007618
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 0.074603,
+     "output": 0.373017,
+     "cache_read": 0.00746
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 0.073058,
+     "output": 0.365292,
+     "cache_read": 0.007306
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 0.071545,
+     "output": 0.357727,
+     "cache_read": 0.007155
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 0.070064,
+     "output": 0.350319,
+     "cache_read": 0.007006
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 0.068613,
+     "output": 0.343063,
+     "cache_read": 0.006861
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 0.067192,
+     "output": 0.335959,
+     "cache_read": 0.006719
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 0.0658,
+     "output": 0.329001,
+     "cache_read": 0.00658
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 0.064437,
+     "output": 0.322187,
+     "cache_read": 0.006444
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 0.063103,
+     "output": 0.315515,
+     "cache_read": 0.00631
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 0.061796,
+     "output": 0.308981,
+     "cache_read": 0.00618
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 0.060516,
+     "output": 0.302582,
+     "cache_read": 0.006052
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 0.059263,
+     "output": 0.296315,
+     "cache_read": 0.005926
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 0.058036,
+     "output": 0.290179,
+     "cache_read": 0.005804
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 0.056834,
+     "output": 0.284169,
+     "cache_read": 0.005683
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 0.055657,
+     "output": 0.278284,
+     "cache_read": 0.005566
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 0.054504,
+     "output": 0.272521,
+     "cache_read": 0.00545
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 0.053375,
+     "output": 0.266877,
+     "cache_read": 0.005338
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 0.05227,
+     "output": 0.26135,
+     "cache_read": 0.005227
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 0.051187,
+     "output": 0.255937,
+     "cache_read": 0.005119
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 0.050127,
+     "output": 0.250637,
+     "cache_read": 0.005013
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 0.049089,
+     "output": 0.245446,
+     "cache_read": 0.004909
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 0.048073,
+     "output": 0.240363,
+     "cache_read": 0.004807
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 0.047077,
+     "output": 0.235385,
+     "cache_read": 0.004708
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 0.094956,
+     "output": 0.47478,
+     "cache_read": 0.009496
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 0.090167,
+     "output": 0.450833,
+     "cache_read": 0.009017
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 0.085619,
+     "output": 0.428093,
+     "cache_read": 0.008562
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 0.0813,
+     "output": 0.406501,
+     "cache_read": 0.00813
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 0.077199,
+     "output": 0.385997,
+     "cache_read": 0.00772
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 0.073306,
+     "output": 0.366528,
+     "cache_read": 0.007331
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 0.069608,
+     "output": 0.34804,
+     "cache_read": 0.006961
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 0.066097,
+     "output": 0.330485,
+     "cache_read": 0.00661
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 0.062763,
+     "output": 0.313816,
+     "cache_read": 0.006276
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 0.059597,
+     "output": 0.297987,
+     "cache_read": 0.00596
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 0.056591,
+     "output": 0.282957,
+     "cache_read": 0.005659
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 0.053737,
+     "output": 0.268685,
+     "cache_read": 0.005374
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 0.051027,
+     "output": 0.255133,
+     "cache_read": 0.005103
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.048453,
+     "output": 0.242264,
+     "cache_read": 0.004845
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.046009,
+     "output": 0.230045,
+     "cache_read": 0.004601
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.043688,
+     "output": 0.218441,
+     "cache_read": 0.004369
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.041485,
+     "output": 0.207423,
+     "cache_read": 0.004148
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.039392,
+     "output": 0.196961,
+     "cache_read": 0.003939
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.037405,
+     "output": 0.187026,
+     "cache_read": 0.003741
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.035519,
+     "output": 0.177593,
+     "cache_read": 0.003552
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.033727,
+     "output": 0.168635,
+     "cache_read": 0.003373
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.032026,
+     "output": 0.16013,
+     "cache_read": 0.003203
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.030411,
+     "output": 0.152053,
+     "cache_read": 0.003041
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.028877,
+     "output": 0.144383,
+     "cache_read": 0.002888
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.02742,
+     "output": 0.137101,
+     "cache_read": 0.002742
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.026037,
+     "output": 0.130186,
+     "cache_read": 0.002604
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.024724,
+     "output": 0.123619,
+     "cache_read": 0.002472
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.023477,
+     "output": 0.117384,
+     "cache_read": 0.002348
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.022293,
+     "output": 0.111463,
+     "cache_read": 0.002229
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.021168,
+     "output": 0.105841,
+     "cache_read": 0.002117
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.0201,
+     "output": 0.100502,
+     "cache_read": 0.00201
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.019087,
+     "output": 0.095433,
+     "cache_read": 0.001909
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.018124,
+     "output": 0.09062,
+     "cache_read": 0.001812
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.01721,
+     "output": 0.086049,
+     "cache_read": 0.001721
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.016342,
+     "output": 0.081709,
+     "cache_read": 0.001634
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.015517,
+     "output": 0.077587,
+     "cache_read": 0.001552
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    }
+   ]
+  },
+  "eci>=160": {
+   "base": {
+    "input": 0.09999999999999999,
+    "output": 0.5,
+    "cache_read": 0.01,
+    "cache_read_listed": true,
+    "blended": 0.2,
+    "v3_base_price": 0.2,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": "anthropic/claude-haiku-5-5",
+    "rule": "same model",
+    "reason": "priced by the same model as eci>=140; takes its base case",
+    "scenario_annual_factors": {
+     "base": 0.7779224731665425,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 0.097929,
+     "output": 0.489645,
+     "cache_read": 0.009793
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 0.095901,
+     "output": 0.479505,
+     "cache_read": 0.00959
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 0.093915,
+     "output": 0.469574,
+     "cache_read": 0.009391
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 0.09197,
+     "output": 0.459849,
+     "cache_read": 0.009197
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 0.090065,
+     "output": 0.450326,
+     "cache_read": 0.009007
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 0.0882,
+     "output": 0.441,
+     "cache_read": 0.00882
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 0.086373,
+     "output": 0.431867,
+     "cache_read": 0.008637
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 0.084585,
+     "output": 0.422923,
+     "cache_read": 0.008458
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 0.082833,
+     "output": 0.414164,
+     "cache_read": 0.008283
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 0.081117,
+     "output": 0.405587,
+     "cache_read": 0.008112
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 0.079437,
+     "output": 0.397187,
+     "cache_read": 0.007944
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 0.077792,
+     "output": 0.388961,
+     "cache_read": 0.007779
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 0.076181,
+     "output": 0.380906,
+     "cache_read": 0.007618
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 0.074603,
+     "output": 0.373017,
+     "cache_read": 0.00746
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 0.073058,
+     "output": 0.365292,
+     "cache_read": 0.007306
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 0.071545,
+     "output": 0.357727,
+     "cache_read": 0.007155
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 0.070064,
+     "output": 0.350319,
+     "cache_read": 0.007006
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 0.068613,
+     "output": 0.343063,
+     "cache_read": 0.006861
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 0.067192,
+     "output": 0.335959,
+     "cache_read": 0.006719
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 0.0658,
+     "output": 0.329001,
+     "cache_read": 0.00658
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 0.064437,
+     "output": 0.322187,
+     "cache_read": 0.006444
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 0.063103,
+     "output": 0.315515,
+     "cache_read": 0.00631
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 0.061796,
+     "output": 0.308981,
+     "cache_read": 0.00618
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 0.060516,
+     "output": 0.302582,
+     "cache_read": 0.006052
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 0.059263,
+     "output": 0.296315,
+     "cache_read": 0.005926
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 0.058036,
+     "output": 0.290179,
+     "cache_read": 0.005804
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 0.056834,
+     "output": 0.284169,
+     "cache_read": 0.005683
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 0.055657,
+     "output": 0.278284,
+     "cache_read": 0.005566
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 0.054504,
+     "output": 0.272521,
+     "cache_read": 0.00545
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 0.053375,
+     "output": 0.266877,
+     "cache_read": 0.005338
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 0.05227,
+     "output": 0.26135,
+     "cache_read": 0.005227
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 0.051187,
+     "output": 0.255937,
+     "cache_read": 0.005119
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 0.050127,
+     "output": 0.250637,
+     "cache_read": 0.005013
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 0.049089,
+     "output": 0.245446,
+     "cache_read": 0.004909
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 0.048073,
+     "output": 0.240363,
+     "cache_read": 0.004807
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 0.047077,
+     "output": 0.235385,
+     "cache_read": 0.004708
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 0.094956,
+     "output": 0.47478,
+     "cache_read": 0.009496
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 0.090167,
+     "output": 0.450833,
+     "cache_read": 0.009017
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 0.085619,
+     "output": 0.428093,
+     "cache_read": 0.008562
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 0.0813,
+     "output": 0.406501,
+     "cache_read": 0.00813
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 0.077199,
+     "output": 0.385997,
+     "cache_read": 0.00772
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 0.073306,
+     "output": 0.366528,
+     "cache_read": 0.007331
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 0.069608,
+     "output": 0.34804,
+     "cache_read": 0.006961
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 0.066097,
+     "output": 0.330485,
+     "cache_read": 0.00661
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 0.062763,
+     "output": 0.313816,
+     "cache_read": 0.006276
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 0.059597,
+     "output": 0.297987,
+     "cache_read": 0.00596
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 0.056591,
+     "output": 0.282957,
+     "cache_read": 0.005659
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 0.053737,
+     "output": 0.268685,
+     "cache_read": 0.005374
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 0.051027,
+     "output": 0.255133,
+     "cache_read": 0.005103
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.048453,
+     "output": 0.242264,
+     "cache_read": 0.004845
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.046009,
+     "output": 0.230045,
+     "cache_read": 0.004601
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.043688,
+     "output": 0.218441,
+     "cache_read": 0.004369
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.041485,
+     "output": 0.207423,
+     "cache_read": 0.004148
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.039392,
+     "output": 0.196961,
+     "cache_read": 0.003939
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.037405,
+     "output": 0.187026,
+     "cache_read": 0.003741
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.035519,
+     "output": 0.177593,
+     "cache_read": 0.003552
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.033727,
+     "output": 0.168635,
+     "cache_read": 0.003373
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.032026,
+     "output": 0.16013,
+     "cache_read": 0.003203
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.030411,
+     "output": 0.152053,
+     "cache_read": 0.003041
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.028877,
+     "output": 0.144383,
+     "cache_read": 0.002888
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.02742,
+     "output": 0.137101,
+     "cache_read": 0.002742
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.026037,
+     "output": 0.130186,
+     "cache_read": 0.002604
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.024724,
+     "output": 0.123619,
+     "cache_read": 0.002472
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.023477,
+     "output": 0.117384,
+     "cache_read": 0.002348
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.022293,
+     "output": 0.111463,
+     "cache_read": 0.002229
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.021168,
+     "output": 0.105841,
+     "cache_read": 0.002117
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.0201,
+     "output": 0.100502,
+     "cache_read": 0.00201
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.019087,
+     "output": 0.095433,
+     "cache_read": 0.001909
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.018124,
+     "output": 0.09062,
+     "cache_read": 0.001812
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.01721,
+     "output": 0.086049,
+     "cache_read": 0.001721
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.016342,
+     "output": 0.081709,
+     "cache_read": 0.001634
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.015517,
+     "output": 0.077587,
+     "cache_read": 0.001552
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 0.1,
+     "output": 0.5,
+     "cache_read": 0.01
+    }
+   ]
+  },
+  "mid": {
+   "base": {
+    "input": 2.0,
+    "output": 10.0,
+    "cache_read": 0.25,
+    "cache_read_listed_share": 0.8571428571428571,
+    "blended": 4.0,
+    "v3_base_price": 4.0,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": null,
+    "rule": "no trend",
+    "reason": "no significant break; full-history trend not significant",
+    "scenario_annual_factors": {
+     "base": 1.0,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 1.899122,
+     "output": 9.495608,
+     "cache_read": 0.23739
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 1.803332,
+     "output": 9.016658,
+     "cache_read": 0.225416
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 1.712373,
+     "output": 8.561865,
+     "cache_read": 0.214047
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 1.626002,
+     "output": 8.130012,
+     "cache_read": 0.20325
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 1.543988,
+     "output": 7.719941,
+     "cache_read": 0.192999
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 1.466111,
+     "output": 7.330553,
+     "cache_read": 0.183264
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 1.392161,
+     "output": 6.960806,
+     "cache_read": 0.17402
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 1.321942,
+     "output": 6.609709,
+     "cache_read": 0.165243
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 1.255264,
+     "output": 6.276321,
+     "cache_read": 0.156908
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 1.19195,
+     "output": 5.959748,
+     "cache_read": 0.148994
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 1.131829,
+     "output": 5.659144,
+     "cache_read": 0.141479
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 1.07474,
+     "output": 5.373701,
+     "cache_read": 0.134343
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 1.020531,
+     "output": 5.102656,
+     "cache_read": 0.127566
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 0.969056,
+     "output": 4.845282,
+     "cache_read": 0.121132
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 0.920178,
+     "output": 4.60089,
+     "cache_read": 0.115022
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 0.873765,
+     "output": 4.368825,
+     "cache_read": 0.109221
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 0.829693,
+     "output": 4.148465,
+     "cache_read": 0.103712
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 0.787844,
+     "output": 3.93922,
+     "cache_read": 0.098481
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 0.748106,
+     "output": 3.740529,
+     "cache_read": 0.093513
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 0.710372,
+     "output": 3.55186,
+     "cache_read": 0.088797
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 0.674541,
+     "output": 3.372707,
+     "cache_read": 0.084318
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 0.640518,
+     "output": 3.202591,
+     "cache_read": 0.080065
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 0.608211,
+     "output": 3.041055,
+     "cache_read": 0.076026
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 0.577533,
+     "output": 2.887666,
+     "cache_read": 0.072192
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 0.548403,
+     "output": 2.742015,
+     "cache_read": 0.06855
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 0.520742,
+     "output": 2.60371,
+     "cache_read": 0.065093
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 0.494476,
+     "output": 2.472381,
+     "cache_read": 0.06181
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 0.469535,
+     "output": 2.347676,
+     "cache_read": 0.058692
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 0.445852,
+     "output": 2.229261,
+     "cache_read": 0.055732
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.423364,
+     "output": 2.116819,
+     "cache_read": 0.05292
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.40201,
+     "output": 2.010049,
+     "cache_read": 0.050251
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.381733,
+     "output": 1.908664,
+     "cache_read": 0.047717
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.362478,
+     "output": 1.812392,
+     "cache_read": 0.04531
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.344195,
+     "output": 1.720977,
+     "cache_read": 0.043024
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.326834,
+     "output": 1.634172,
+     "cache_read": 0.040854
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.310349,
+     "output": 1.551746,
+     "cache_read": 0.038794
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 2.0,
+     "output": 10.0,
+     "cache_read": 0.25
+    }
+   ]
+  },
+  "frontier": {
+   "base": {
+    "input": 4.5,
+    "output": 22.5,
+    "cache_read": 0.22499999999999998,
+    "cache_read_listed_share": 1.0,
+    "blended": 9.0,
+    "v3_base_price": 9.0,
+    "blended_vs_v3_pct": 0.0,
+    "cheapest_model": null,
+    "rule": "rising trend held flat",
+    "reason": "no significant break; full-history trend rises (x1.67/yr), held flat as a judgement call",
+    "scenario_annual_factors": {
+     "base": 1.0,
+     "fast": 0.5373701234865069,
+     "slow": 1.0
+    }
+   },
+   "forecast": [
+    {
+     "month": "2026-11",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2026-12",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-01",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-02",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-03",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-04",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-05",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-06",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-07",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-08",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-09",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-10",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-11",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-12",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-01",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-02",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-03",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-04",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-05",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-06",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-07",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-08",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-09",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-10",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-11",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-12",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-01",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-02",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-03",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-04",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-05",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-06",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-07",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-08",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-09",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-10",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-11",
+     "scenario": "base",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2026-11",
+     "scenario": "fast",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2026-12",
+     "scenario": "fast",
+     "input": 4.273024,
+     "output": 21.365119,
+     "cache_read": 0.213651
+    },
+    {
+     "month": "2027-01",
+     "scenario": "fast",
+     "input": 4.057496,
+     "output": 20.28748,
+     "cache_read": 0.202875
+    },
+    {
+     "month": "2027-02",
+     "scenario": "fast",
+     "input": 3.852839,
+     "output": 19.264196,
+     "cache_read": 0.192642
+    },
+    {
+     "month": "2027-03",
+     "scenario": "fast",
+     "input": 3.658505,
+     "output": 18.292526,
+     "cache_read": 0.182925
+    },
+    {
+     "month": "2027-04",
+     "scenario": "fast",
+     "input": 3.473973,
+     "output": 17.369867,
+     "cache_read": 0.173699
+    },
+    {
+     "month": "2027-05",
+     "scenario": "fast",
+     "input": 3.298749,
+     "output": 16.493745,
+     "cache_read": 0.164937
+    },
+    {
+     "month": "2027-06",
+     "scenario": "fast",
+     "input": 3.132363,
+     "output": 15.661814,
+     "cache_read": 0.156618
+    },
+    {
+     "month": "2027-07",
+     "scenario": "fast",
+     "input": 2.974369,
+     "output": 14.871845,
+     "cache_read": 0.148718
+    },
+    {
+     "month": "2027-08",
+     "scenario": "fast",
+     "input": 2.824344,
+     "output": 14.121722,
+     "cache_read": 0.141217
+    },
+    {
+     "month": "2027-09",
+     "scenario": "fast",
+     "input": 2.681887,
+     "output": 13.409434,
+     "cache_read": 0.134094
+    },
+    {
+     "month": "2027-10",
+     "scenario": "fast",
+     "input": 2.546615,
+     "output": 12.733073,
+     "cache_read": 0.127331
+    },
+    {
+     "month": "2027-11",
+     "scenario": "fast",
+     "input": 2.418166,
+     "output": 12.090828,
+     "cache_read": 0.120908
+    },
+    {
+     "month": "2027-12",
+     "scenario": "fast",
+     "input": 2.296195,
+     "output": 11.480977,
+     "cache_read": 0.11481
+    },
+    {
+     "month": "2028-01",
+     "scenario": "fast",
+     "input": 2.180377,
+     "output": 10.901886,
+     "cache_read": 0.109019
+    },
+    {
+     "month": "2028-02",
+     "scenario": "fast",
+     "input": 2.070401,
+     "output": 10.352004,
+     "cache_read": 0.10352
+    },
+    {
+     "month": "2028-03",
+     "scenario": "fast",
+     "input": 1.965971,
+     "output": 9.829857,
+     "cache_read": 0.098299
+    },
+    {
+     "month": "2028-04",
+     "scenario": "fast",
+     "input": 1.866809,
+     "output": 9.334047,
+     "cache_read": 0.09334
+    },
+    {
+     "month": "2028-05",
+     "scenario": "fast",
+     "input": 1.772649,
+     "output": 8.863246,
+     "cache_read": 0.088632
+    },
+    {
+     "month": "2028-06",
+     "scenario": "fast",
+     "input": 1.683238,
+     "output": 8.416191,
+     "cache_read": 0.084162
+    },
+    {
+     "month": "2028-07",
+     "scenario": "fast",
+     "input": 1.598337,
+     "output": 7.991685,
+     "cache_read": 0.079917
+    },
+    {
+     "month": "2028-08",
+     "scenario": "fast",
+     "input": 1.517718,
+     "output": 7.588591,
+     "cache_read": 0.075886
+    },
+    {
+     "month": "2028-09",
+     "scenario": "fast",
+     "input": 1.441166,
+     "output": 7.205829,
+     "cache_read": 0.072058
+    },
+    {
+     "month": "2028-10",
+     "scenario": "fast",
+     "input": 1.368475,
+     "output": 6.842373,
+     "cache_read": 0.068424
+    },
+    {
+     "month": "2028-11",
+     "scenario": "fast",
+     "input": 1.29945,
+     "output": 6.49725,
+     "cache_read": 0.064972
+    },
+    {
+     "month": "2028-12",
+     "scenario": "fast",
+     "input": 1.233907,
+     "output": 6.169534,
+     "cache_read": 0.061695
+    },
+    {
+     "month": "2029-01",
+     "scenario": "fast",
+     "input": 1.17167,
+     "output": 5.858348,
+     "cache_read": 0.058583
+    },
+    {
+     "month": "2029-02",
+     "scenario": "fast",
+     "input": 1.112571,
+     "output": 5.562857,
+     "cache_read": 0.055629
+    },
+    {
+     "month": "2029-03",
+     "scenario": "fast",
+     "input": 1.056454,
+     "output": 5.282272,
+     "cache_read": 0.052823
+    },
+    {
+     "month": "2029-04",
+     "scenario": "fast",
+     "input": 1.003168,
+     "output": 5.015838,
+     "cache_read": 0.050158
+    },
+    {
+     "month": "2029-05",
+     "scenario": "fast",
+     "input": 0.952569,
+     "output": 4.762843,
+     "cache_read": 0.047628
+    },
+    {
+     "month": "2029-06",
+     "scenario": "fast",
+     "input": 0.904522,
+     "output": 4.52261,
+     "cache_read": 0.045226
+    },
+    {
+     "month": "2029-07",
+     "scenario": "fast",
+     "input": 0.858899,
+     "output": 4.294493,
+     "cache_read": 0.042945
+    },
+    {
+     "month": "2029-08",
+     "scenario": "fast",
+     "input": 0.815576,
+     "output": 4.077882,
+     "cache_read": 0.040779
+    },
+    {
+     "month": "2029-09",
+     "scenario": "fast",
+     "input": 0.774439,
+     "output": 3.872197,
+     "cache_read": 0.038722
+    },
+    {
+     "month": "2029-10",
+     "scenario": "fast",
+     "input": 0.735377,
+     "output": 3.676887,
+     "cache_read": 0.036769
+    },
+    {
+     "month": "2029-11",
+     "scenario": "fast",
+     "input": 0.698286,
+     "output": 3.491428,
+     "cache_read": 0.034914
+    },
+    {
+     "month": "2026-11",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2026-12",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-01",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-02",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-03",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-04",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-05",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-06",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-07",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-08",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-09",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-10",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-11",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2027-12",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-01",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-02",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-03",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-04",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-05",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-06",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-07",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-08",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-09",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-10",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-11",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2028-12",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-01",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-02",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-03",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-04",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-05",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-06",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-07",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-08",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-09",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-10",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    },
+    {
+     "month": "2029-11",
+     "scenario": "slow",
+     "input": 4.5,
+     "output": 22.5,
+     "cache_read": 0.225
+    }
+   ]
+  }
+ }
+}

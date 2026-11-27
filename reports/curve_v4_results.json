@@ -1,0 +1,725 @@
+{
+ "anchor_month": "2026-11",
+ "v3_tier_history_max_abs_diff": 0.0,
+ "bases": {
+  "eci>=120": {
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "cache_read_listed": false,
+   "blended": 0.0875,
+   "v3_base_price": 0.0875,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": "openai/gpt-oss-20b",
+   "rule": "floor",
+   "reason": "break in 2025-09 (p=0.001); no significant change since",
+   "scenario_annual_factors": {
+    "base": 1.0,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "eci>=130": {
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "cache_read_listed": false,
+   "blended": 0.0875,
+   "v3_base_price": 0.0875,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": "openai/gpt-oss-20b",
+   "rule": "same model",
+   "reason": "priced by the same model as eci>=120; takes its base case",
+   "scenario_annual_factors": {
+    "base": 1.0,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "eci>=140": {
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "cache_read_listed": true,
+   "blended": 0.2,
+   "v3_base_price": 0.2,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": "anthropic/claude-haiku-5-5",
+   "rule": "post-break rate",
+   "reason": "break in 2025-09 (p=0.001); still changing at x0.78/yr since",
+   "scenario_annual_factors": {
+    "base": 0.7779224731665425,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "eci>=150": {
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "cache_read_listed": true,
+   "blended": 0.2,
+   "v3_base_price": 0.2,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": "anthropic/claude-haiku-5-5",
+   "rule": "same model",
+   "reason": "priced by the same model as eci>=140; takes its base case",
+   "scenario_annual_factors": {
+    "base": 0.7779224731665425,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "eci>=160": {
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "cache_read_listed": true,
+   "blended": 0.2,
+   "v3_base_price": 0.2,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": "anthropic/claude-haiku-5-5",
+   "rule": "same model",
+   "reason": "priced by the same model as eci>=140; takes its base case",
+   "scenario_annual_factors": {
+    "base": 0.7779224731665425,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "mid": {
+   "input": 2.0,
+   "output": 10.0,
+   "cache_read": 0.25,
+   "cache_read_listed_share": 0.8571428571428571,
+   "blended": 4.0,
+   "v3_base_price": 4.0,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": null,
+   "rule": "no trend",
+   "reason": "no significant break; full-history trend not significant",
+   "scenario_annual_factors": {
+    "base": 1.0,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  },
+  "frontier": {
+   "input": 4.5,
+   "output": 22.5,
+   "cache_read": 0.22499999999999998,
+   "cache_read_listed_share": 1.0,
+   "blended": 9.0,
+   "v3_base_price": 9.0,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": null,
+   "rule": "rising trend held flat",
+   "reason": "no significant break; full-history trend rises (x1.67/yr), held flat as a judgement call",
+   "scenario_annual_factors": {
+    "base": 1.0,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  }
+ },
+ "capability_today": [
+  {
+   "eci_min": 120,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 121,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 122,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 123,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 124,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 125,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 126,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 127,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 128,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 129,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 130,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 131,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 132,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 133,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 134,
+   "model": "openai/gpt-oss-20b",
+   "eci": 134.89,
+   "input": 0.049999999999999996,
+   "output": 0.19999999999999998,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=130",
+   "rate_rule": "same model",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 135,
+   "model": "openai/gpt-5-nano",
+   "eci": 139.07,
+   "input": 0.049999999999999996,
+   "output": 0.39999999999999997,
+   "cache_read": 0.005,
+   "rate_from": "eci>=130",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 136,
+   "model": "openai/gpt-5-nano",
+   "eci": 139.07,
+   "input": 0.049999999999999996,
+   "output": 0.39999999999999997,
+   "cache_read": 0.005,
+   "rate_from": "eci>=130",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 137,
+   "model": "openai/gpt-5-nano",
+   "eci": 139.07,
+   "input": 0.049999999999999996,
+   "output": 0.39999999999999997,
+   "cache_read": 0.005,
+   "rate_from": "eci>=130",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 138,
+   "model": "openai/gpt-5-nano",
+   "eci": 139.07,
+   "input": 0.049999999999999996,
+   "output": 0.39999999999999997,
+   "cache_read": 0.005,
+   "rate_from": "eci>=130",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 139,
+   "model": "openai/gpt-5-nano",
+   "eci": 139.07,
+   "input": 0.049999999999999996,
+   "output": 0.39999999999999997,
+   "cache_read": 0.005,
+   "rate_from": "eci>=130",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 1.0
+  },
+  {
+   "eci_min": 140,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 141,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 142,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 143,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 144,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 145,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 146,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 147,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 148,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 149,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 150,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 151,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 152,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 153,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 154,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 155,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 156,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 157,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 158,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 159,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 160,
+   "model": "anthropic/claude-haiku-5-5",
+   "eci": 160.33,
+   "input": 0.09999999999999999,
+   "output": 0.5,
+   "cache_read": 0.01,
+   "rate_from": "eci>=160",
+   "rate_rule": "same model",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 161,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 162,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 163,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 164,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 165,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 166,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 167,
+   "model": "openai/gpt-6-1-terra",
+   "eci": 167.71,
+   "input": 1.0,
+   "output": 5.0,
+   "cache_read": 0.049999999999999996,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 168,
+   "model": "openai/gpt-6-1-sol",
+   "eci": 168.61,
+   "input": 2.0,
+   "output": 10.0,
+   "cache_read": 0.09999999999999999,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  },
+  {
+   "eci_min": 169,
+   "model": "openai/gpt-6-astra",
+   "eci": 169.21,
+   "input": 10.0,
+   "output": 50.0,
+   "cache_read": 1.0,
+   "rate_from": "eci>=160",
+   "rate_rule": "nearest band below",
+   "base_annual_factor": 0.7779224731665425
+  }
+ ],
+ "output_to_input_ratio": {
+  "eci>=120": {
+   "first": "2024-08",
+   "first_ratio": 4.0,
+   "last_ratio": 4.0,
+   "median_ratio": 4.0
+  },
+  "eci>=130": {
+   "first": "2025-01",
+   "first_ratio": 4.0,
+   "last_ratio": 4.0,
+   "median_ratio": 4.0
+  },
+  "eci>=140": {
+   "first": "2025-03",
+   "first_ratio": 4.0,
+   "last_ratio": 5.0,
+   "median_ratio": 4.0
+  },
+  "eci>=150": {
+   "first": "2025-12",
+   "first_ratio": 8.0,
+   "last_ratio": 5.0,
+   "median_ratio": 5.5
+  },
+  "eci>=160": {
+   "first": "2026-05",
+   "first_ratio": 6.0,
+   "last_ratio": 5.0,
+   "median_ratio": 6.0
+  },
+  "frontier": {
+   "first": "2024-08",
+   "first_ratio": 3.0,
+   "last_ratio": 5.0,
+   "median_ratio": 5.0
+  },
+  "mid": {
+   "first": "2024-04",
+   "first_ratio": 5.0,
+   "last_ratio": 5.0,
+   "median_ratio": 4.230769230769231
+  }
+ },
+ "capability_thresholds": [
+  120,
+  169
+ ]
+}
