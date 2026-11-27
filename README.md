@@ -1,7 +1,18 @@
 # ai-cost-economics
 
-Daily snapshots of model pricing from the [OpenRouter models API](https://openrouter.ai/api/v1/models),
-for tracking how AI costs change over time.
+How the cost of AI work changes over time. The project has two layers:
+
+| Layer | What it does | Where |
+|---|---|---|
+| **1. Core: token price curve** | Token prices only: historical prices per model, then a monthly price per tier and token type (input, output, cache read), projected 36 months forward under three scenarios. Knows nothing about workflows. | `scripts/`, `data/`, `reports/curve_*` |
+| **2. Workflow layer: token profiles** | A workflow is a YAML profile of assumed token volumes per task. A cost function combines a profile with the curve to give cost per task and per month. | `workflows/` |
+
+Live model runs are not needed. They are an optional calibration step for profiles
+(see [Optional: calibrating a profile](#optional-calibrating-a-profile)).
+
+Layer 1 starts from daily snapshots of model pricing from the
+[OpenRouter models API](https://openrouter.ai/api/v1/models). The models API is public and needs no
+account or key.
 
 A GitHub Actions workflow ([daily-fetch.yml](.github/workflows/daily-fetch.yml)) runs the
 script every day at 06:00 UTC and commits any new data. It can also be started manually
@@ -110,8 +121,9 @@ includes it.
 ## Token price curve
 
 ```bash
-uv run python scripts/build_curve.py              # v3 (default, the published curve)
+uv run python scripts/build_curve.py              # v3 (default): tiers, base cases, blended curve
 uv run python scripts/build_curve.py --version v2 # or v0, v1; earlier versions still reproduce
+uv run python scripts/build_curve_v4.py           # v4: v3 split by token type, plus the capability lookup
 ```
 
 Reads `price_history.parquet`, `prices.parquet`, `model_map.csv` and `models.csv`. Builds a monthly
@@ -152,7 +164,133 @@ Base case as of 2026-11:
 | `reports/curve_v3.md` | Method, floor tests, results, backtests, judgement calls, limitations. Also `curve_v0.md` to `curve_v2.md`. |
 | `reports/curve_v3_*.png`, `_results.json`, `_rolling_rates.csv` | Charts, all reported numbers, rolling decline rates. |
 
-### Sources, licences and attribution
+### Curve v4: prices per token type and by capability
+
+v4 keeps v3's tiers, base levels and rates, and v3's files stay unchanged. It adds two things:
+- **Separate input, output and cache-read prices** per tier, scenario and month (months 0–36).
+  Reasoning tokens are billed at the output price.
+- **A capability lookup:** the cheapest model at or above each whole ECI threshold (120–169), each
+  month since 2023-10, and projected forward.
+
+Details are in [`reports/curve_v4.md`](reports/curve_v4.md).
+
+| Tier (2026-11) | Input | Output | Cache read |
+|---|---|---|---|
+| ECI ≥ 120, ≥ 130 | $0.05 | $0.20 | $0.05 (the reference provider lists no cache price) |
+| ECI ≥ 140 to ≥ 160 | $0.10 | $0.50 | $0.01 |
+| mid | $2.00 | $10.00 | $0.25 |
+| frontier | $4.50 | $22.50 | $0.225 |
+
+| file | content |
+|---|---|
+| `data/curves/curve_v4.csv`, `.json` | Per tier, scenario and month: `input`, `output`, `cache_read`, `blended` (USD per 1M tokens). `months_ahead = 0` is today's base level. |
+| `data/curves/tier_history_v4.csv` | v3's monthly tier history with a price per token type. |
+| `data/curves/capability_v4.csv` | Capability lookup: `month`, `eci_min`, `scenario` (`history` for past months), cheapest `model`, prices per type, `rate_from`. |
+| `reports/curve_v4.md`, `curve_v4_capability.png`, `curve_v4_results.json` | Method, checks, judgement calls, chart. |
+
+## Workflow layer: token profiles
+
+A **profile** describes one workflow as token volumes per task. Price data stays in the curve;
+the profile holds only the volumes and which price applies.
+
+```bash
+uv run python -m workflows.run_profiles                     # every profile in workflows/profiles/
+uv run python -m workflows.run_profiles my_profiles/ --out out/ --from 2025-01 --to 2027-12
+```
+
+This writes `profile_costs.csv`, with one row per profile, month and scenario, and `profile_costs.png`,
+showing central cost per task over time. Output goes to `reports/workflows/` by default. The months
+default to today through +36 months; earlier months are priced from the curve's history.
+
+### Profile schema (YAML)
+
+```yaml
+name: my-workflow                 # required, unique
+description: What one task is.    # required
+example: false                    # true = made-up volumes; flagged in every output
+tokens_per_task:                  # per task, summed over all model calls
+  input:      {low: 2000, central: 6000, high: 15000}   # uncached input tokens (required)
+  output:     {low: 300, central: 800, high: 2000}      # visible output tokens (required)
+  reasoning:  {low: 0, central: 1500, high: 6000}       # billed at the output price (default 0)
+  cache_read: {low: 0, central: 4000, high: 20000}      # input served from a prompt cache (default 0)
+model:                            # exactly one of:
+  tier: mid                       #   a curve tier: eci>=120 ... eci>=160, mid, frontier
+  # min_eci: 150                  #   or: the cheapest model with Epoch ECI >= 150, month by month
+effort: medium                    # none | low | medium | high (a label: the volumes should match it)
+runs_per_month: {low: 500, central: 2000, high: 5000}  # optional; adds monthly cost
+```
+
+- **Writing a value.** Any volume can be one number (low = central = high) or `{low, central, high}`.
+  Unknown keys are rejected, which catches typos.
+- **Cache writes.** Count tokens written to a cache as `input`.
+- **One effort per profile.** For a workflow run at two effort levels, write two profiles.
+- **Example profile.**
+  [`workflows/profiles/example_placeholder.yaml`](workflows/profiles/example_placeholder.yaml) is a
+  placeholder with **made-up volumes**. It shows the format and is not an estimate of anything.
+
+### Cost function
+
+```python
+from workflows.cost import cost
+from workflows.profile import load_profile
+
+c = cost(load_profile("workflows/profiles/example_placeholder.yaml"), "2027-06", "base")
+c["cost_per_task"]   # {"low": ..., "central": ..., "high": ...} in USD
+c["monthly_cost"]    # the same times runs_per_month, or None if the profile has none
+```
+
+- **Arguments.** `cost(profile, month, scenario)` takes a month (`"2027-06"`, a date or a Timestamp)
+  and a scenario: `base`, `fast` or `slow`.
+- **Months.** From today to +36 months, prices come from curve_v4. Earlier months come from history,
+  and the scenario has no effect there.
+- **Formula.** Cost per task = Σ over token types of tokens × price ÷ 1M, with reasoning tokens at the
+  output price.
+- **Ranges.** Low, central and high spread the token volumes only; price uncertainty is the scenario.
+  Monthly cost pairs low runs with low volumes, and likewise for high, so its low and high are bounds,
+  not percentiles.
+- **`min_eci`.** Rounded up to a whole ECI point. Below 120, the ECI ≥ 120 price is used, which is an
+  upper bound.
+
+Tests: `uv run pytest`.
+
+### Optional: calibrating a profile
+
+`workflows/calibration/` runs four synthetic finance workflows against a model and logs tokens per
+task:
+- data Q&A over a 2k-token table
+- screening of 200 companies
+- summary of a public earnings call
+- a portfolio-review agent of at least 4 turns, with fixed tool responses
+
+All inputs are synthetic except the earnings call, which is a public SEC filing. It is read from
+`.cache/` and not redistributed. Each run gets an automated quality score.
+
+```bash
+# estimate only (no calls)
+uv run python -m workflows.calibration.run_task_tokens --adapter mock --models demo
+# local model, no account
+uv run python -m workflows.calibration.run_task_tokens --adapter ollama --models gpt-oss:20b --run --reps 1
+# draft profiles from logged runs
+uv run python -m workflows.calibration.run_task_tokens summarise --runs data/tasks/token_runs.parquet --out drafts/
+```
+
+- **Adapters.** Model access goes through one small adapter per provider
+  ([`adapters.py`](workflows/calibration/adapters.py)). Two are included, and neither needs an
+  account:
+  - `mock`: offline and deterministic, for tests.
+  - `ollama`: a local Ollama server.
+
+  To add a provider, such as Gemini's free tier or a single vendor's API, add a class with `price()`
+  and `chat()` and register it. That class reads its own key from the environment or from `.env`,
+  which is git-ignored; never commit a key.
+- **Spending cap.** `--run` refuses to start if the estimate, with a 1.5× margin, is over `--max-cost`
+  (default $20). It stops before any run that could take spending over the cap.
+- **Output.** Results go to `data/tasks/token_runs.parquet`, with a resume log in `.cache/tasks/`.
+  `summarise` turns runs into draft profiles: low, central and high are the min, median and max over
+  repetitions. Review the drafts and set `model.tier` or `model.min_eci` before moving them into
+  `workflows/profiles/`.
+
+## Sources, licences and attribution
 
 | source | licence | attribution / caveats |
 |---|---|---|

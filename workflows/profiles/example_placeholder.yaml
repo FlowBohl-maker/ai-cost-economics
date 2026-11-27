@@ -1,0 +1,37 @@
+# EXAMPLE ONLY. Every number in this file is made up to show the format.
+# It is not a measurement and not an estimate of any real workflow. Replace the volumes with
+# your own (or calibrate them with workflows/calibration/run_task_tokens.py) before using the output.
+name: example-placeholder
+description: >-
+  Placeholder showing the profile format: a document Q&A task with a cached system prompt.
+  Volumes are invented.
+example: true
+
+tokens_per_task:            # per task, summed over every model call in the task
+  input:                    # uncached input tokens
+    low: 2000
+    central: 6000
+    high: 15000
+  output:                   # visible output tokens
+    low: 300
+    central: 800
+    high: 2000
+  reasoning:                # reasoning tokens (billed at the output price); 0 if the model doesn't reason
+    low: 0
+    central: 1500
+    high: 6000
+  cache_read:               # input tokens served from a prompt cache
+    low: 0
+    central: 4000
+    high: 20000
+
+model:
+  tier: mid                 # a curve tier: eci>=120 ... eci>=160, mid, frontier
+  # min_eci: 150            # or instead: the cheapest model with Epoch ECI >= 150, month by month
+
+effort: medium              # none | low | medium | high: a label; the volumes above should match it
+
+runs_per_month:             # optional; adds monthly cost
+  low: 500
+  central: 2000
+  high: 5000
