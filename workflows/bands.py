@@ -16,6 +16,7 @@ CONFIG = ROOT / "config" / "capability_bands.yaml"
 class Band:
     name: str
     min_eci: float
+    median_tier: str | None = None  # curve tier giving the band's median price view; None = no median view
 
 
 @dataclass(frozen=True)
@@ -26,7 +27,7 @@ class Bands:
 
     @classmethod
     def from_dict(cls, d: dict) -> "Bands":
-        bands = tuple(Band(str(b["name"]), float(b["min_eci"])) for b in d["bands"])
+        bands = tuple(Band(str(b["name"]), float(b["min_eci"]), b.get("median_tier")) for b in d["bands"])
         if not bands:
             raise ValueError("capability bands: at least one band is required")
         if len({b.name for b in bands}) != len(bands):

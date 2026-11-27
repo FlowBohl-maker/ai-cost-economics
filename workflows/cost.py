@@ -4,12 +4,14 @@
   from workflows.profile import load_profile
   cost(load_profile("workflows/profiles/example_placeholder.yaml"), "2027-06", "base")
 
-Prices:
-- model.band: the cheapest model with ECI >= the band's lower edge (config/capability_bands.yaml), month by month
-  (capability_v4). The output also prices the next band up, as a sensitivity.
-- model.min_eci: the same lookup at ceil(min_eci). Below the lookup's lowest threshold (120) the ECI >= 120 price
-  is used, an upper bound. The next band up is priced too. A threshold near a band edge gets a warning.
-- model.tier: the tier's curve_v4 price. No band-up sensitivity (tiers and bands are priced differently).
+Two price views, each at low / central / high token volumes:
+- cheapest (low price case): the cheapest model with ECI >= the band's lower edge (config/capability_bands.yaml),
+  month by month (capability_v4). For model.min_eci, the same lookup at ceil(min_eci); below the lookup's lowest
+  threshold (120) the ECI >= 120 price is used, an upper bound. A threshold near a band edge gets a warning.
+- median (central price case): the median model of the band's median tier (small / mid / frontier in curve_v4),
+  every token type from the same model(s). The floor band has none.
+- model.tier: the tier's own view only (eci>=N tiers are cheapest-model indices; small / mid / frontier are medians).
+The output also prices both views one band up, as a sensitivity (not for tier profiles).
 Months from the curve's anchor month (today's base level, months_ahead 0) to +36 come from the forward curve;
 earlier months from history, where the scenario does not matter. Reasoning tokens are billed at the output price.
 """
@@ -80,10 +82,14 @@ class PriceCurves:
             raise CostError(f"no {what} price in {key[-1]:%Y-%m}")
         return table.loc[key]
 
+    def period(self, month) -> str:
+        m = to_month(month)
+        return "history" if m < self.anchor else "today" if m == self.anchor else "forecast"
+
     def _result(self, row: pd.Series, basis: str, m: pd.Timestamp) -> dict:
         out = {t: float(row[t]) for t in PRICE_TYPES}
         out["basis"] = basis + (f", {row['model']}" if "model" in row.index else "")
-        out["period"] = "history" if m < self.anchor else "today" if m == self.anchor else "forecast"
+        out["period"] = self.period(m)
         return out
 
     def tier_prices(self, tier: str, month, scenario: str = "base") -> dict:
@@ -105,19 +111,6 @@ class PriceCurves:
         key = (thr, "history" if m < self.anchor else scenario, m)
         return self._result(self._row(self._cap, key, basis), basis, m)
 
-    def prices(self, profile: Profile, month, scenario: str = "base", bands: Bands | None = None) -> dict:
-        """USD per 1M tokens for each token type, plus where the price came from."""
-        try:
-            if profile.tier is not None:
-                return self.tier_prices(profile.tier, month, scenario)
-            if profile.band is not None:
-                b = (bands or load_bands()).get(profile.band)
-                pr = self.capability_prices(b.min_eci, month, scenario)
-                return {**pr, "basis": f"band {b.name} ({pr['basis']})"}
-            return self.capability_prices(profile.min_eci, month, scenario)
-        except CostError as e:
-            raise CostError(f"{profile.name}: {e}") from None
-
 
 _DEFAULT: PriceCurves | None = None
 
@@ -129,37 +122,74 @@ def default_curves() -> PriceCurves:
     return _DEFAULT
 
 
+VIEWS = {
+    "cheapest": {"price_case": "low", "label": "cheapest model meeting the band"},
+    "median": {"price_case": "central", "label": "tier median model"},
+}
+
+
 def _costs(profile: Profile, pr: dict) -> tuple[dict, dict | None]:
     per_task = {lv: sum(profile.tokens[t][lv] * pr[PRICE_OF[t]] for t in profile.tokens) / 1e6 for lv in LEVELS}
     monthly = None if profile.runs_per_month is None else {lv: per_task[lv] * profile.runs_per_month[lv] for lv in LEVELS}
     return per_task, monthly
 
 
+def _view(name: str, profile: Profile, pr: dict) -> dict:
+    per_task, monthly = _costs(profile, pr)
+    return {"view": name, **VIEWS[name], "basis": pr["basis"], "prices_per_mtok": {t: pr[t] for t in PRICE_TYPES},
+            "cost_per_task": per_task, "monthly_cost": monthly}
+
+
+def _band_views(band, profile: Profile, curves: "PriceCurves", month, scenario, eci: float | None = None) -> dict:
+    """Both price views for a band: cheapest model at or above `eci` (default: the band's edge), and the band's
+    median tier (None where the band has none)."""
+    cheap = curves.capability_prices(band.min_eci if eci is None else eci, month, scenario)
+    cheap = {**cheap, "basis": f"band {band.name}: {cheap['basis']}" if eci is None else cheap["basis"]}
+    views = {"cheapest": _view("cheapest", profile, cheap), "median": None}
+    if band.median_tier:
+        med = curves.tier_prices(band.median_tier, month, scenario)
+        views["median"] = _view("median", profile, {**med, "basis": f"band {band.name}: median of {med['basis']}"})
+    return views
+
+
 def cost(profile: Profile, month, scenario: str = "base", curves: PriceCurves | None = None,
          bands: Bands | None = None) -> dict:
-    """Cost per task (USD) at low / central / high token volumes, monthly cost if runs_per_month is set, and the
-    same at the next capability band up (band_up; None for tier profiles and the top band).
+    """Cost per task (USD) and monthly cost under two price views, each at low / central / high token volumes.
 
-    Low / central / high spread the token volumes only; price uncertainty is the scenario argument.
-    Monthly cost pairs levels (low volumes x low runs, ...), so its low and high are bounds, not percentiles.
+    views["cheapest"]: low price case, the cheapest model meeting the band (or the exact min_eci).
+    views["median"]:   central price case, the median model of the band's median tier (config median_tier).
+    A view is None where it doesn't apply: floor has no median tier; a tier profile has only its own view
+    (eci>=N tiers are cheapest-model indices, small / mid / frontier are medians).
+    band_up holds the same two views one band up (None for tier profiles and the top band).
+
+    Volume levels spread the token volumes only; scenario covers price changes over time. Monthly cost pairs
+    levels (low volumes x low runs, ...), so its low and high are bounds, not percentiles.
     """
     curves = curves or default_curves()
     bands = bands or load_bands()
-    pr = curves.prices(profile, month, scenario, bands)
-    per_task, monthly = _costs(profile, pr)
-    # an exact threshold falls in the band of the (rounded-up) threshold it is priced at
-    band = (profile.band if profile.band else
-            bands.containing(math.ceil(profile.min_eci)).name if profile.min_eci is not None else None)
-    warns = bands.edge_warnings(profile.min_eci) if profile.min_eci is not None else []
-    up = None
-    if band is not None and (nb := bands.up(band)) is not None:
-        upr = curves.capability_prices(nb.min_eci, month, scenario)
-        up_task, up_monthly = _costs(profile, upr)
-        c = per_task["central"]
-        up = {"band": nb.name, "basis": f"band {nb.name} ({upr['basis']})",
-              "prices_per_mtok": {t: upr[t] for t in PRICE_TYPES}, "cost_per_task": up_task, "monthly_cost": up_monthly,
-              "change_central_pct": None if c == 0 else 100 * (up_task["central"] / c - 1)}
-    return {"profile": profile.name, "month": f"{to_month(month):%Y-%m}", "scenario": scenario, "example": profile.example,
-            "band": band, "basis": pr["basis"], "period": pr["period"],
-            "prices_per_mtok": {t: pr[t] for t in PRICE_TYPES},
-            "cost_per_task": per_task, "monthly_cost": monthly, "band_up": up, "warnings": warns}
+    m = f"{to_month(month):%Y-%m}"
+    notes, band = [], None
+    try:
+        if profile.tier is not None:
+            pr = curves.tier_prices(profile.tier, month, scenario)
+            name = "cheapest" if profile.tier.startswith("eci>=") else "median"
+            views = {"cheapest": None, "median": None, name: _view(name, profile, pr)}
+            notes.append(f"tier profile: only the {name} view ({VIEWS[name]['label']}) applies")
+        else:
+            if profile.band is not None:
+                band = bands.get(profile.band)
+                views = _band_views(band, profile, curves, month, scenario)
+            else:  # an exact threshold falls in the band of the (rounded-up) threshold it is priced at
+                band = bands.containing(math.ceil(profile.min_eci))
+                views = _band_views(band, profile, curves, month, scenario, eci=profile.min_eci)
+            if views["median"] is None:
+                notes.append(f"band {band.name} has no median tier, so there is no central price case")
+        up = None
+        if band is not None and (nb := bands.up(band.name)) is not None:
+            up = {"band": nb.name, "views": _band_views(nb, profile, curves, month, scenario)}
+    except CostError as e:
+        raise CostError(f"{profile.name}: {e}") from None
+    period = next(v for v in views.values() if v is not None)
+    return {"profile": profile.name, "month": m, "scenario": scenario, "example": profile.example,
+            "band": band.name if band else None, "period": curves.period(month), "views": views, "band_up": up,
+            "warnings": bands.edge_warnings(profile.min_eci) if profile.min_eci is not None else [], "notes": notes}

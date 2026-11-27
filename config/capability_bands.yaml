@@ -11,6 +11,13 @@
 #   frontier  164  about 5 points below the best model (v3's frontier tier: within 5 points)
 # Because the edges are fixed, a band's price follows a fixed capability level as it gets cheaper.
 # Review them when the frontier moves: a new best model makes today's "frontier" next year's "mid".
+#
+# Two price views per band, both shown in the cost output:
+#   cheapest (low price case)      the cheapest model at or above min_eci (capability_v4)
+#   median   (central price case)  the median model of the curve tier named in median_tier (curve_v4): models
+#                                  released in the last 12 months within a fixed number of ECI points of the best
+#                                  model (small 15-30, mid 5-15, frontier 0-5). In 2026-11 those ranges match the
+#                                  band edges. floor has no median tier: almost no models in its range are recent.
 
 as_of: 2026-11
 edge_warning_points: 2     # an exact min_eci this close to a band edge gets a warning
@@ -18,9 +25,13 @@ edge_warning_points: 2     # an exact min_eci this close to a band edge gets a w
 bands:                     # ascending order
   - name: floor
     min_eci: 120
+    median_tier: null
   - name: small
     min_eci: 140
+    median_tier: small
   - name: mid
     min_eci: 154
+    median_tier: mid
   - name: frontier
     min_eci: 164
+    median_tier: frontier
