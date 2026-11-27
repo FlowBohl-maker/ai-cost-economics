@@ -100,8 +100,10 @@
   "mid": {
    "input": 2.0,
    "output": 10.0,
-   "cache_read": 0.25,
-   "cache_write": 2.0,
+   "cache_read": 0.19999999999999998,
+   "cache_write": 2.3333333333333335,
+   "base_month": "2026-11",
+   "median_models": "anthropic/claude-sonnet-5; moonshotai/kimi-k3-1-pro; openai/gpt-6-sol",
    "cache_read_listed_share": 0.8571428571428571,
    "cache_write_listed_share": 0.4,
    "blended": 4.0,
@@ -119,8 +121,10 @@
   "frontier": {
    "input": 4.5,
    "output": 22.5,
-   "cache_read": 0.22499999999999998,
+   "cache_read": 0.35,
    "cache_write": 5.625,
+   "base_month": "2026-10",
+   "median_models": "anthropic/claude-opus-5; anthropic/claude-opus-5-5",
    "cache_read_listed_share": 1.0,
    "cache_write_listed_share": 0.875,
    "blended": 9.0,
@@ -134,6 +138,100 @@
     "fast": 0.5373701234865069,
     "slow": 1.0
    }
+  },
+  "small": {
+   "input": 0.5,
+   "output": 2.75,
+   "cache_read": 0.32,
+   "cache_write": 0.5,
+   "base_month": "2026-11",
+   "median_models": "moonshotai/kimi-k2-thinking; qwen/qwen-3-8-27b",
+   "cache_read_listed_share": 0.6944444444444444,
+   "cache_write_listed_share": 0.16666666666666666,
+   "blended": 1.0625,
+   "v3_base_price": 1.0625,
+   "blended_vs_v3_pct": 0.0,
+   "cheapest_model": null,
+   "rule": "no trend",
+   "reason": "no significant break; full-history trend not significant",
+   "scenario_annual_factors": {
+    "base": 1.0,
+    "fast": 0.5373701234865069,
+    "slow": 1.0
+   }
+  }
+ },
+ "median_tier_price_structure": {
+  "mid": {
+   "before_separate_medians": {
+    "input": 2.0,
+    "output": 10.0,
+    "cache_read": 0.25,
+    "cache_write": 2.0
+   },
+   "after_median_model": {
+    "input": 2.0,
+    "output": 10.0,
+    "cache_read": 0.19999999999999998,
+    "cache_write": 2.3333333333333335
+   },
+   "median_models": "anthropic/claude-sonnet-5; moonshotai/kimi-k3-1-pro; openai/gpt-6-sol",
+   "base_month": "2026-11"
+  },
+  "frontier": {
+   "before_separate_medians": {
+    "input": 4.5,
+    "output": 22.5,
+    "cache_read": 0.22499999999999998,
+    "cache_write": 5.625
+   },
+   "after_median_model": {
+    "input": 4.5,
+    "output": 22.5,
+    "cache_read": 0.35,
+    "cache_write": 5.625
+   },
+   "median_models": "anthropic/claude-opus-5; anthropic/claude-opus-5-5",
+   "base_month": "2026-10"
+  },
+  "small": {
+   "before_separate_medians": {
+    "input": 0.55,
+    "output": 2.5,
+    "cache_read": 0.15,
+    "cache_write": 0.42499999999999993
+   },
+   "after_median_model": {
+    "input": 0.5,
+    "output": 2.75,
+    "cache_read": 0.32,
+    "cache_write": 0.5
+   },
+   "median_models": "moonshotai/kimi-k2-thinking; qwen/qwen-3-8-27b",
+   "base_month": "2026-11"
+  }
+ },
+ "small_tier_floor_test": {
+  "small": {
+   "n_months": 30,
+   "first_month": "2024-05",
+   "full_annual_factor": 1.2098500512129042,
+   "full_ci95": [
+    0.6560564811986106,
+    2.2311145280443374
+   ],
+   "testable": true,
+   "break_month": "2025-09",
+   "sup_f": 14.348719425385836,
+   "p_value": 0.303,
+   "ar1_rho": 0.7210370320019377,
+   "pre_annual_factor": 4.675644739962809,
+   "post_annual_factor": 5.790152314525294,
+   "post_ci95": [
+    4.460574091766357,
+    7.516042360396393
+   ],
+   "post_months": 15
   }
  },
  "capability_today": [
@@ -779,7 +877,13 @@
    "first": "2024-04",
    "first_ratio": 5.0,
    "last_ratio": 5.0,
-   "median_ratio": 4.230769230769231
+   "median_ratio": 4.158862876254181
+  },
+  "small": {
+   "first": "2024-05",
+   "first_ratio": 5.0,
+   "last_ratio": 5.5,
+   "median_ratio": 3.0000000000000004
   }
  },
  "capability_thresholds": [

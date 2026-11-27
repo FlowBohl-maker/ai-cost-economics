@@ -19,6 +19,7 @@ Outputs: data/curves/curve_v4.csv, curve_v4.json, tier_history_v4.csv, capabilit
 
 from __future__ import annotations
 
+import contextlib
 import json
 import sys
 from pathlib import Path
@@ -40,6 +41,36 @@ TYPES = ["input", "output", "cache_read", "cache_write"]
 CACHE_TYPES = {"cache_read": "cache_read_price_per_mtok", "cache_write": "cache_write_price_per_mtok"}
 SCENARIOS = ["base", "fast", "slow"]
 CAP_MIN = 120  # lowest threshold in the capability lookup (v3's lowest band)
+# v4 adds a "small" median tier built exactly like v3's mid and frontier tiers: models 15-30 ECI points below the
+# best priced model that month, released in the last 12 months. (30-50 points below has no recent models.)
+V4_ONLY_GAP_TIERS = [("small", 15, 30)]
+GAP_TIERS_V4 = bc.GAP_TIERS + V4_ONLY_GAP_TIERS
+
+
+@contextlib.contextmanager
+def v3_gap_tiers(tiers, tier_names=None):
+    """Run build_curve's gap-tier functions on other tier definitions (restores the v3 settings afterwards)."""
+    old = bc.GAP_TIERS, bc.TIER_NAMES
+    bc.GAP_TIERS, bc.TIER_NAMES = tiers, (bc.TIER_NAMES if tier_names is None else tier_names)
+    try:
+        yield
+    finally:
+        bc.GAP_TIERS, bc.TIER_NAMES = old
+
+
+def median_price_set(g: pd.DataFrame) -> dict:
+    """Prices of the median model by blended price, all token types from the same model(s).
+
+    Odd count: the middle model. Even count: the two middle models, averaged. Models tied at a middle blended
+    price are averaged first, so the result doesn't depend on how ties are ordered. The blended price of the
+    result equals the median blended price exactly (v3's tier index)."""
+    b = g.blended.sort_values().to_numpy()
+    n = len(b)
+    mids = [b[n // 2]] if n % 2 else [b[n // 2 - 1], b[n // 2]]
+    sets = [g[np.isclose(g.blended, v)] for v in mids]
+    out = {t: float(np.mean([s[t].mean() for s in sets])) for t in TYPES}
+    out["median_models"] = "; ".join(sorted(set().union(*[set(s.canonical_id) for s in sets])))
+    return out
 
 
 def v3_setup():
@@ -92,14 +123,14 @@ def panel_v3() -> pd.DataFrame:
     return p
 
 
-def gap_members(p: pd.DataFrame) -> pd.DataFrame:
-    """The models in each v3 gap tier each month (same selection as build_curve.gap_tier_index)."""
+def gap_members(p: pd.DataFrame, tiers=GAP_TIERS_V4) -> pd.DataFrame:
+    """The models in each gap tier each month (same selection as build_curve.gap_tier_index)."""
     q = p.copy()
     q["gap"] = q.groupby("month").eci.transform("max") - q.eci
     rel = q.epoch_release_date.fillna(q.groupby("canonical_id").month.transform("min"))
     q["age"] = (q.month.dt.year - rel.dt.year) * 12 + q.month.dt.month - rel.dt.month
     return pd.concat([q[(q.gap >= lo) & (q.gap < hi) & (q.age <= bc.GAP_TIER_MAX_AGE)].assign(tier=name)
-                      for name, lo, hi in bc.GAP_TIERS], ignore_index=True)
+                      for name, lo, hi in tiers], ignore_index=True)
 
 
 def tier_history(p: pd.DataFrame, idx: pd.DataFrame) -> pd.DataFrame:
@@ -107,14 +138,16 @@ def tier_history(p: pd.DataFrame, idx: pd.DataFrame) -> pd.DataFrame:
         p[["month", "canonical_id", "cache_read", "cache_write", "cache_read_listed", "cache_write_listed"]],
         left_on=["month", "cheapest_model"], right_on=["month", "canonical_id"], how="left").drop(columns="canonical_id")
     mem = gap_members(p)
-    gap = mem.groupby(["month", "tier"]).agg(cache_read=("cache_read", "median"), cache_write=("cache_write", "median"),
-                                             cache_read_listed_share=("cache_read_listed", "mean"),
-                                             cache_write_listed_share=("cache_write_listed", "mean")).reset_index()
-    gap = idx[~idx.tier.str.startswith("eci>=")].merge(gap, on=["month", "tier"], how="left")
-    h = pd.concat([bands, gap], ignore_index=True).rename(columns={"index_input": "input", "index_output": "output",
-                                                                   "index_price": "blended_v3"})
+    rows = []
+    for (m, tier), g in mem.groupby(["month", "tier"]):
+        rows.append({"month": m, "tier": tier, **median_price_set(g),
+                     "cache_read_listed_share": g.cache_read_listed.mean(), "cache_write_listed_share": g.cache_write_listed.mean()})
+    gap = idx[~idx.tier.str.startswith("eci>=")].drop(columns=["index_input", "index_output"]).merge(
+        pd.DataFrame(rows), on=["month", "tier"], how="left")
+    bands = bands.rename(columns={"index_input": "input", "index_output": "output"})
+    h = pd.concat([bands, gap], ignore_index=True).rename(columns={"index_price": "blended_v3"})
     h["blended"] = bc.INPUT_WEIGHT * h.input + (1 - bc.INPUT_WEIGHT) * h.output
-    cols = ["month", "tier", *TYPES, "blended", "blended_v3", "cheapest_model", "cheapest_eci", "price_source",
+    cols = ["month", "tier", *TYPES, "blended", "blended_v3", "cheapest_model", "cheapest_eci", "median_models", "price_source",
             "cache_read_listed", "cache_write_listed", "cache_read_listed_share", "cache_write_listed_share", "n_models", "used"]
     return h[cols].sort_values(["tier", "month"]).reset_index(drop=True)
 
@@ -218,16 +251,36 @@ def main() -> int:
     max_diff = float((chk.index_price_v3 - chk.index_price_v4).abs().max())
     assert len(chk) == len(th3) and max_diff < 1e-9, f"v4 does not reproduce v3's tier history (max diff {max_diff})"
 
+    # v4-only small median tier: v3's gap-tier index, floor test and base-case rule on 15-30 points below the best
+    with v3_gap_tiers(V4_ONLY_GAP_TIERS):
+        idx_small = bc.gap_tier_index(p)
+    hed = json.loads((REP / "curve_v3_results.json").read_text())["v3"]["hedonic_annual_factor"]
+    small_tests = {n: bc.floor_test(idx_small[(idx_small.tier == n) & idx_small.used], np.random.default_rng(0))
+                   for n, _, _ in V4_ONLY_GAP_TIERS}
+    with v3_gap_tiers(V4_ONLY_GAP_TIERS, tier_names=[]):
+        small_bases = bc.base_cases(p, idx_small, small_tests, last, hed)
+    tiers = {**v3, **{n: {"base_case": {**small_bases[n], "v4_only": True}} for n in small_bases}}
+    idx = pd.concat([idx, idx_small], ignore_index=True)
+
     hist = tier_history(p, idx)
-    bases, rows = {}, []
-    for tier, t in v3.items():
+    bases, rows, before = {}, [], {}
+    for tier, t in tiers.items():
         bcase = t["base_case"]
         if tier.startswith("eci>="):
             b = model_base(p, bcase["cheapest_model"], last)
         else:
+            # v3's base level is the median of the last 3 monthly medians, i.e. one of those months; take that
+            # month's median-model price set (the latest such month if two months tie)
             d = hist[(hist.tier == tier) & hist.used].sort_values("month").tail(bc.BASE_MEDIAN_MONTHS)
-            b = {**{x: float(d[x].median()) for x in TYPES}, "cache_read_listed_share": float(d.cache_read_listed_share.iloc[-1]),
+            row = d[np.isclose(d.blended_v3, d.blended_v3.median())].iloc[-1]
+            b = {**{x: float(row[x]) for x in TYPES}, "base_month": f"{row.month:%Y-%m}", "median_models": row.median_models,
+                 "cache_read_listed_share": float(d.cache_read_listed_share.iloc[-1]),
                  "cache_write_listed_share": float(d.cache_write_listed_share.iloc[-1])}
+            # before: each token type a separate median across models, then a 3-month median per type
+            mem = gap_members(p)
+            mem = mem[(mem.tier == tier) & mem.month.isin(d.month)]
+            sep = mem.groupby("month")[TYPES].median().median()
+            before[tier] = {x: float(sep[x]) for x in TYPES}
         blended = bc.INPUT_WEIGHT * b["input"] + (1 - bc.INPUT_WEIGHT) * b["output"]
         bases[tier] = {**b, "blended": blended, "v3_base_price": bcase["base_price"],
                        "blended_vs_v3_pct": 100 * (blended / bcase["base_price"] - 1),
@@ -236,6 +289,9 @@ def main() -> int:
         rows.append(project(b, bcase["scenario_annual_factors"], last).assign(tier=tier))
     curve = pd.concat(rows, ignore_index=True)[["month", "months_ahead", "tier", "scenario", *TYPES, "blended", "annual_factor"]]
     cap, today = capability(p, v3, last)
+    structure = {t: {"before_separate_medians": before[t],
+                     "after_median_model": {x: bases[t][x] for x in TYPES},
+                     "median_models": bases[t]["median_models"], "base_month": bases[t]["base_month"]} for t in before}
 
     # ---- write
     fmt = lambda d: d.assign(month=d.month.dt.strftime("%Y-%m-%d"))
@@ -248,6 +304,13 @@ def main() -> int:
                 "cache_read": "input tokens read from a prompt cache; priced as input where the source lists no cache-read price",
                 "cache_write": "input tokens written to a prompt cache; priced as input where the source lists no cache-write price"},
             "blended": f"{bc.INPUT_WEIGHT:.0%} input + {1 - bc.INPUT_WEIGHT:.0%} output, as in v3",
+            "tier_price_structure": {
+                "eci>=N": "all token types from the cheapest model (by blended price) at or above the threshold",
+                "small, mid, frontier": "all token types from the median model by blended price among the tier's models "
+                                        "(two middle models averaged for an even count; models tied at the median averaged); "
+                                        "base = that month among the last 3 whose median blended price is their median"},
+            "tiers_added_in_v4": {"small": "median price of models 15-30 ECI points below the best priced model that month, "
+                                           "released in the last 12 months; v3's base-case rule"},
             "months": "months_ahead 0 = the base level in the anchor month; 1-36 = forward curve",
             "scenarios": {"base": "v3 base case per tier", "fast": "v3 fast (constant-capability decline unless the base is steeper)",
                           "slow": "no change"},
@@ -262,6 +325,7 @@ def main() -> int:
         lambda d: {"first": f"{d.month.min():%Y-%m}", "first_ratio": float(d.r.iloc[0]), "last_ratio": float(d.r.iloc[-1]),
                    "median_ratio": float(d.r.median())}, include_groups=False).to_dict()
     results = {"anchor_month": f"{last:%Y-%m}", "v3_tier_history_max_abs_diff": max_diff, "bases": bases,
+               "median_tier_price_structure": structure, "small_tier_floor_test": small_tests,
                "capability_today": today.to_dict("records"), "output_to_input_ratio": ratio_hist,
                "capability_thresholds": [int(today.eci_min.min()), int(today.eci_min.max())]}
     (REP / "curve_v4_results.json").write_text(json.dumps(results, indent=1, default=str))
