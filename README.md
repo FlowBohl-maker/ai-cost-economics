@@ -4,7 +4,7 @@ How the cost of AI work changes over time. The project has two layers:
 
 | Layer | What it does | Where |
 |---|---|---|
-| **1. Core: token price curve** | Token prices only: historical prices per model, then a monthly price per tier and token type (input, output, cache read), projected 36 months forward under three scenarios. Knows nothing about workflows. | `scripts/`, `data/`, `reports/curve_*` |
+| **1. Core: token price curve** | Token prices only: historical prices per model, then a monthly price per tier and token type (input, output, cache read, cache write), projected 36 months forward under three scenarios. Knows nothing about workflows. | `scripts/`, `data/`, `reports/curve_*` |
 | **2. Workflow layer: token profiles** | A workflow is a YAML profile of assumed token volumes per task. A cost function combines a profile with the curve to give cost per task and per month. | `workflows/` |
 
 Live model runs are not needed. They are an optional calibration step for profiles
@@ -49,9 +49,11 @@ One row per model per snapshot date. Unique key: `(snapshot_date, model_id)`.
 | `input_price_per_mtok` | float64 | USD per million input (prompt) tokens |
 | `output_price_per_mtok` | float64 | USD per million output (completion) tokens |
 | `cache_read_price_per_mtok` | float64 | USD per million cached-input read tokens; null if the model has no cache pricing |
+| `cache_write_price_per_mtok` | float64 | USD per million tokens written to the prompt cache (`input_cache_write`); null if not listed |
 | `context_length` | Int64 | Context window in tokens |
 
 OpenRouter reports prices per token as strings; they are multiplied by 1,000,000.
+`uv run python scripts/fetch_prices.py --rebuild` rebuilds the parquet file from `data/raw/` without an API call.
 Missing prices and OpenRouter's `-1` marker (variable pricing, e.g. `openrouter/auto`)
 become null.
 
@@ -83,7 +85,7 @@ includes it.
 
 | file | content |
 |---|---|
-| `data/price_history.parquet` | Long format, same columns as `prices.parquet` plus `source` (`litellm` / `llm_prices`), `canonical_id`, `eci`, `inferred_start`, `price_conflict`. Unique key: `(snapshot_date, source, model_id)`. `model_id` is the source's own ID; join on `canonical_id` across sources and to OpenRouter. |
+| `data/price_history.parquet` | Long format, same columns as `prices.parquet` (cache-write prices from LiteLLM's `cache_creation_input_token_cost`) plus `source` (`litellm` / `llm_prices`), `canonical_id`, `eci`, `inferred_start`, `price_conflict`. Unique key: `(snapshot_date, source, model_id)`. `model_id` is the source's own ID; join on `canonical_id` across sources and to OpenRouter. |
 | `data/model_map_overrides.csv` | Hand-reviewed mappings (`source, source_id, canonical_id, note`). Applied before automatic matching; add a row here to resolve a review item. |
 | `data/model_map.csv` | Source ID → canonical ID for LiteLLM, llm-prices, OpenRouter and Epoch, with `match_method`, `needs_review`, `candidate_canonical_id`, `note`. **Review the rows with `needs_review = true`.** |
 | `data/models.csv` | One row per canonical model: first/last month, sources, vendor, ECI (+ CI), Epoch model name. |
@@ -167,23 +169,25 @@ Base case as of 2026-11:
 ### Curve v4: prices per token type and by capability
 
 v4 keeps v3's tiers, base levels and rates, and v3's files stay unchanged. It adds two things:
-- **Separate input, output and cache-read prices** per tier, scenario and month (months 0–36).
-  Reasoning tokens are billed at the output price.
+- **Separate input, output, cache-read and cache-write prices** per tier, scenario and month
+  (months 0–36). Reasoning tokens are billed at the output price. Cache prices come from the same source
+  as the model's input price (its maker, or v3's reference provider). Where that source lists none, those
+  tokens are priced as input.
 - **A capability lookup:** the cheapest model at or above each whole ECI threshold (120–169), each
   month since 2023-10, and projected forward.
 
 Details are in [`reports/curve_v4.md`](reports/curve_v4.md).
 
-| Tier (2026-11) | Input | Output | Cache read |
-|---|---|---|---|
-| ECI ≥ 120, ≥ 130 | $0.05 | $0.20 | $0.05 (the reference provider lists no cache price) |
-| ECI ≥ 140 to ≥ 160 | $0.10 | $0.50 | $0.01 |
-| mid | $2.00 | $10.00 | $0.25 |
-| frontier | $4.50 | $22.50 | $0.225 |
+| Tier (2026-11) | Input | Output | Cache read | Cache write |
+|---|---|---|---|---|
+| ECI ≥ 120, ≥ 130 | $0.05 | $0.20 | $0.05 | $0.05 (the reference provider lists no cache prices) |
+| ECI ≥ 140 to ≥ 160 | $0.10 | $0.50 | $0.01 | $0.125 |
+| mid (median of models) | $2.00 | $10.00 | $0.25 | $2.00 |
+| frontier (median of models) | $4.50 | $22.50 | $0.225 | $5.625 |
 
 | file | content |
 |---|---|
-| `data/curves/curve_v4.csv`, `.json` | Per tier, scenario and month: `input`, `output`, `cache_read`, `blended` (USD per 1M tokens). `months_ahead = 0` is today's base level. |
+| `data/curves/curve_v4.csv`, `.json` | Per tier, scenario and month: `input`, `output`, `cache_read`, `cache_write`, `blended` (USD per 1M tokens). `months_ahead = 0` is today's base level. |
 | `data/curves/tier_history_v4.csv` | v3's monthly tier history with a price per token type. |
 | `data/curves/capability_v4.csv` | Capability lookup: `month`, `eci_min`, `scenario` (`history` for past months), cheapest `model`, prices per type, `rate_from`. |
 | `reports/curve_v4.md`, `curve_v4_capability.png`, `curve_v4_results.json` | Method, checks, judgement calls, chart. |
@@ -199,8 +203,32 @@ uv run python -m workflows.run_profiles my_profiles/ --out out/ --from 2025-01 -
 ```
 
 This writes `profile_costs.csv`, with one row per profile, month and scenario, and `profile_costs.png`,
-showing central cost per task over time. Output goes to `reports/workflows/` by default. The months
-default to today through +36 months; earlier months are priced from the curve's history.
+showing central cost per task over time. The CSV includes the cost one band up and any edge warnings.
+The months default to today through +36 months; earlier months are priced from the curve's history.
+Output goes to `reports/workflows/` by default. That folder is git-ignored until real profiles exist.
+
+### Capability bands
+
+Profiles should choose a **capability band**. The band edges are defined once, in
+[`config/capability_bands.yaml`](config/capability_bands.yaml):
+
+| Band | Minimum ECI | Cheapest model today (2026-11) | Input / output per 1M |
+|---|---|---|---|
+| floor | 120 | gpt-oss-20b | $0.05 / $0.20 |
+| small | 140 | Claude Haiku 5.5 | $0.10 / $0.50 |
+| mid | 154 | Claude Haiku 5.5 | $0.10 / $0.50 |
+| frontier | 164 | GPT-6.1 Terra | $1.00 / $5.00 |
+
+- **Pricing.** A band is priced at the cheapest model whose ECI is at or above the band's minimum,
+  month by month, from the capability lookup in curve_v4. This is the cheapest way to get at least
+  that capability.
+- **Not the same as the mid and frontier tiers.** Those curve tiers are the median price of models in
+  the tier (about $4 and $9 blended). Use `model.tier` for that measure.
+- **Small and mid share a price today.** Claude Haiku 5.5 (ECI 160.3) costs $0.20 blended and clears
+  both edges.
+- **Fixed edges.** The edges are absolute ECI values, set against the 2026-11 frontier (best model:
+  ECI 169.2). A band therefore tracks a fixed capability level as it gets cheaper. Review the edges
+  when the frontier moves.
 
 ### Profile schema (YAML)
 
@@ -213,16 +241,24 @@ tokens_per_task:                  # per task, summed over all model calls
   output:     {low: 300, central: 800, high: 2000}      # visible output tokens (required)
   reasoning:  {low: 0, central: 1500, high: 6000}       # billed at the output price (default 0)
   cache_read: {low: 0, central: 4000, high: 20000}      # input served from a prompt cache (default 0)
+  cache_write: {low: 0, central: 1000, high: 4000}      # input written to a prompt cache (default 0)
 model:                            # exactly one of:
-  tier: mid                       #   a curve tier: eci>=120 ... eci>=160, mid, frontier
-  # min_eci: 150                  #   or: the cheapest model with Epoch ECI >= 150, month by month
+  band: mid                       #   a capability band: floor | small | mid | frontier (recommended)
+  # min_eci: 150                  #   or an exact threshold: the cheapest model with Epoch ECI >= 150
+  # tier: mid                     #   or a curve tier: eci>=120 ... eci>=160, mid, frontier
 effort: medium                    # none | low | medium | high (a label: the volumes should match it)
 runs_per_month: {low: 500, central: 2000, high: 5000}  # optional; adds monthly cost
 ```
 
 - **Writing a value.** Any volume can be one number (low = central = high) or `{low, central, high}`.
   Unknown keys are rejected, which catches typos.
-- **Cache writes.** Count tokens written to a cache as `input`.
+- **Cache writes.** Tokens written to a prompt cache go in `cache_write`, not `input`. Some providers
+  charge more than input for them (Anthropic and OpenAI list 1.25× for several models); where nothing
+  is listed, they cost the input price.
+- **Exact thresholds.** `min_eci` stays available. A value within 2 ECI points of a band edge (the
+  `edge_warning_points` setting) gets a warning when the profile loads and in the cost output, because
+  small changes to the threshold can change the price a lot (for example, ECI ≥ 160 costs $0.20 blended
+  and ≥ 161 costs $2.00).
 - **One effort per profile.** For a workflow run at two effort levels, write two profiles.
 - **Example profile.**
   [`workflows/profiles/example_placeholder.yaml`](workflows/profiles/example_placeholder.yaml) is a
@@ -237,6 +273,8 @@ from workflows.profile import load_profile
 c = cost(load_profile("workflows/profiles/example_placeholder.yaml"), "2027-06", "base")
 c["cost_per_task"]   # {"low": ..., "central": ..., "high": ...} in USD
 c["monthly_cost"]    # the same times runs_per_month, or None if the profile has none
+c["band_up"]         # the same costs one band up, with change_central_pct; None at the top band
+c["warnings"]        # band-edge warnings for an exact min_eci
 ```
 
 - **Arguments.** `cost(profile, month, scenario)` takes a month (`"2027-06"`, a date or a Timestamp)
@@ -250,6 +288,10 @@ c["monthly_cost"]    # the same times runs_per_month, or None if the profile has
   not percentiles.
 - **`min_eci`.** Rounded up to a whole ECI point. Below 120, the ECI ≥ 120 price is used, which is an
   upper bound.
+- **One band up.** For `band` and `min_eci` profiles, `band_up` reprices the same volumes at the next
+  band's minimum ECI, for the same month and scenario. This is a sensitivity: what the task costs if it
+  turns out to need more capability. `min_eci` profiles count from the band their threshold falls in.
+  `tier` profiles have no band-up, because tiers and bands are priced differently.
 
 Tests: `uv run pytest`.
 
@@ -287,7 +329,7 @@ uv run python -m workflows.calibration.run_task_tokens summarise --runs data/tas
   (default $20). It stops before any run that could take spending over the cap.
 - **Output.** Results go to `data/tasks/token_runs.parquet`, with a resume log in `.cache/tasks/`.
   `summarise` turns runs into draft profiles: low, central and high are the min, median and max over
-  repetitions. Review the drafts and set `model.tier` or `model.min_eci` before moving them into
+  repetitions. Review the drafts and set `model.band` (or `min_eci` / `tier`) before moving them into
   `workflows/profiles/`.
 
 ## Sources, licences and attribution

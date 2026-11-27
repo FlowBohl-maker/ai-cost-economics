@@ -24,10 +24,15 @@ tokens_per_task:            # per task, summed over every model call in the task
     low: 0
     central: 4000
     high: 20000
+  cache_write:              # input tokens written to a prompt cache (some providers charge more than input)
+    low: 0
+    central: 1000
+    high: 4000
 
 model:
-  tier: mid                 # a curve tier: eci>=120 ... eci>=160, mid, frontier
-  # min_eci: 150            # or instead: the cheapest model with Epoch ECI >= 150, month by month
+  band: mid                 # a capability band: floor | small | mid | frontier (config/capability_bands.yaml)
+  # min_eci: 150            # or an exact threshold: the cheapest model with Epoch ECI >= 150
+  # tier: mid               # or a curve_v4 tier (eci>=120 ... eci>=160, mid, frontier)
 
 effort: medium              # none | low | medium | high: a label; the volumes above should match it
 

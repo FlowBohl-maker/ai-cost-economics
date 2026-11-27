@@ -10,9 +10,11 @@ A profile is one YAML file (see workflows/profiles/example_placeholder.yaml and 
     output:     N or {low, central, high}   visible output tokens            (required)
     reasoning:  N or {low, central, high}   reasoning tokens, billed as output (default 0)
     cache_read: N or {low, central, high}   input tokens read from a prompt cache (default 0)
+    cache_write: N or {low, central, high}  input tokens written to a prompt cache (default 0)
   model:                            required; exactly one of
-    tier: <curve tier>              eci>=120 ... eci>=160, mid, frontier
-    min_eci: <number>               cheapest model with Epoch ECI >= this, month by month
+    band: <capability band>         floor | small | mid | frontier (edges in config/capability_bands.yaml); recommended
+    min_eci: <number>               exact: cheapest model with Epoch ECI >= this, month by month
+    tier: <curve tier>              a curve_v4 tier: eci>=120 ... eci>=160, mid, frontier (tier median for mid/frontier)
   effort: none | low | medium | high   optional label (default none); the token volumes should match it
   runs_per_month: N or {low, central, high}   optional; adds monthly cost
   notes, calibration: free-form     optional, ignored by the cost model
@@ -20,12 +22,16 @@ A profile is one YAML file (see workflows/profiles/example_placeholder.yaml and 
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
 
-TOKEN_TYPES = ("input", "output", "reasoning", "cache_read")
+from .bands import load_bands
+
+TOKEN_TYPES = ("input", "output", "reasoning", "cache_read", "cache_write")
+MODEL_KEYS = ("band", "min_eci", "tier")
 REQUIRED_TOKENS = ("input", "output")
 LEVELS = ("low", "central", "high")
 EFFORTS = ("none", "low", "medium", "high")
@@ -34,6 +40,10 @@ ALLOWED_KEYS = {"name", "description", "example", "tokens_per_task", "model", "e
 
 class ProfileError(ValueError):
     pass
+
+
+class EdgeWarning(UserWarning):
+    """An exact min_eci close to a capability band edge."""
 
 
 @dataclass(frozen=True)
@@ -73,6 +83,7 @@ class Profile:
     name: str
     description: str
     tokens: dict[str, Range]
+    band: str | None = None
     tier: str | None = None
     min_eci: float | None = None
     effort: str = "none"
@@ -82,7 +93,7 @@ class Profile:
 
     @property
     def price_basis(self) -> str:
-        return f"tier {self.tier}" if self.tier else f"ECI >= {self.min_eci:g}"
+        return f"band {self.band}" if self.band else f"tier {self.tier}" if self.tier else f"ECI >= {self.min_eci:g}"
 
 
 def parse_profile(d: dict, source: str | None = None) -> Profile:
@@ -105,18 +116,25 @@ def parse_profile(d: dict, source: str | None = None) -> Profile:
             raise ProfileError(f"{where}: tokens_per_task.{k} is required")
     tokens = {k: Range.parse(t.get(k, 0), f"{where}: tokens_per_task.{k}") for k in TOKEN_TYPES}
     m = d.get("model")
-    if not isinstance(m, dict) or len({"tier", "min_eci"} & set(m)) != 1 or set(m) - {"tier", "min_eci"}:
-        raise ProfileError(f"{where}: 'model' needs exactly one of 'tier' or 'min_eci'")
-    tier, min_eci = m.get("tier"), m.get("min_eci")
+    if not isinstance(m, dict) or len(set(MODEL_KEYS) & set(m)) != 1 or set(m) - set(MODEL_KEYS):
+        raise ProfileError(f"{where}: 'model' needs exactly one of 'band', 'min_eci' or 'tier'")
+    band, tier, min_eci = m.get("band"), m.get("tier"), m.get("min_eci")
     if tier is not None and not isinstance(tier, str):
         raise ProfileError(f"{where}: model.tier must be a tier name")
+    if band is not None:
+        bands = load_bands()
+        if band not in bands.names:
+            raise ProfileError(f"{where}: unknown band {band!r}; bands: {', '.join(bands.names)}")
     if min_eci is not None and (isinstance(min_eci, bool) or not isinstance(min_eci, (int, float))):
         raise ProfileError(f"{where}: model.min_eci must be a number")
     effort = str(d.get("effort", "none")).lower()
     if effort not in EFFORTS:
         raise ProfileError(f"{where}: effort must be one of {', '.join(EFFORTS)}")
     runs = Range.parse(d["runs_per_month"], f"{where}: runs_per_month") if d.get("runs_per_month") is not None else None
-    return Profile(name=d["name"].strip(), description=d["description"].strip(), tokens=tokens, tier=tier,
+    if min_eci is not None:
+        for w in load_bands().edge_warnings(float(min_eci)):
+            warnings.warn(f"{where}: {w}", EdgeWarning, stacklevel=2)
+    return Profile(name=d["name"].strip(), description=d["description"].strip(), tokens=tokens, band=band, tier=tier,
                    min_eci=None if min_eci is None else float(min_eci), effort=effort, runs_per_month=runs,
                    example=bool(d.get("example", False)), source=source)
 

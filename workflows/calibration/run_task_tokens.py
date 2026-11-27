@@ -178,20 +178,20 @@ def run(a) -> int:
 def draft_profiles(runs: pd.DataFrame) -> list[dict]:
     """One draft profile per (model, workflow, effort): low / central / high = min / median / max over repetitions.
 
-    Usage fields follow the OpenAI convention: input_tokens includes cached reads and output_tokens includes
-    reasoning, so they are split into the profile's four billed token types here.
+    Usage fields follow the OpenAI convention: input_tokens includes cache reads and writes and output_tokens
+    includes reasoning, so they are split into the profile's five billed token types here.
     """
     r = runs[runs.get("error").isna()] if "error" in runs else runs
-    r = r.assign(input=r.input_tokens - r.cached_tokens, output=r.output_tokens - r.reasoning_tokens,
-                 reasoning=r.reasoning_tokens, cache_read=r.cached_tokens)
+    r = r.assign(input=r.input_tokens - r.cached_tokens - r.cache_write_tokens, output=r.output_tokens - r.reasoning_tokens,
+                 reasoning=r.reasoning_tokens, cache_read=r.cached_tokens, cache_write=r.cache_write_tokens)
     out = []
     for (model, wf, eff), g in r.groupby(["model", "workflow", r.effort.fillna("none")]):
         tok = {k: {"low": int(g[k].min()), "central": int(g[k].median()), "high": int(g[k].max())}
-               for k in ("input", "output", "reasoning", "cache_read")}
+               for k in ("input", "output", "reasoning", "cache_read", "cache_write")}
         out.append({"name": f"{wf}-{model.replace('/', '-').replace(':', '-')}-{eff}",
                     "description": f"Draft calibrated from {len(g)} run(s) of the synthetic '{wf}' workflow on {model}. "
-                                   "Set model.tier or model.min_eci before use.",
-                    "tokens_per_task": tok, "model": {"tier": "CHOOSE"}, "effort": eff,
+                                   "Set model.band (or min_eci / tier) before use.",
+                    "tokens_per_task": tok, "model": {"band": "CHOOSE"}, "effort": eff,
                     "calibration": {"source": "workflows/calibration/run_task_tokens.py", "adapter": str(g.adapter.iloc[0]),
                                     "model": model, "runs": int(len(g)), "median_quality": float(g.quality.median())}})
     return out

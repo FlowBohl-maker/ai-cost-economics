@@ -38,12 +38,18 @@ def cost_table(profiles, curves: PriceCurves, months, scenarios=SCENARIOS) -> pd
         for sc in scenarios:
             for m in months:
                 c = cost(p, m, sc, curves)
-                rows.append({"profile": p.name, "example": p.example, "basis": c["basis"], "effort": p.effort,
+                up = c["band_up"] or {}
+                rows.append({"profile": p.name, "example": p.example, "band": c["band"], "basis": c["basis"], "effort": p.effort,
                              "month": c["month"], "months_ahead": (m.year - curves.anchor.year) * 12 + m.month - curves.anchor.month,
                              "scenario": sc, "period": c["period"],
                              **{f"price_{t}": v for t, v in c["prices_per_mtok"].items()},
                              **{f"cost_per_task_{lv}": c["cost_per_task"][lv] for lv in LEVELS},
-                             **{f"monthly_cost_{lv}": (c["monthly_cost"] or {}).get(lv) for lv in LEVELS}})
+                             **{f"monthly_cost_{lv}": (c["monthly_cost"] or {}).get(lv) for lv in LEVELS},
+                             "band_up": up.get("band"), "band_up_basis": up.get("basis"),
+                             **{f"band_up_cost_per_task_{lv}": (up.get("cost_per_task") or {}).get(lv) for lv in LEVELS},
+                             **{f"band_up_monthly_cost_{lv}": (up.get("monthly_cost") or {}).get(lv) for lv in LEVELS},
+                             "band_up_change_central_pct": up.get("change_central_pct"),
+                             "warnings": " | ".join(c["warnings"])})
     return pd.DataFrame(rows)
 
 
@@ -59,6 +65,8 @@ def chart(df: pd.DataFrame, path: Path):
             ax.fill_between(b.month, b.cost_per_task_low, b.cost_per_task_high, color=c, alpha=0.12, lw=0)
         for sc, s in g.groupby("scenario"):
             ax.plot(s.month, s.cost_per_task_central, color=c, lw=2, ls=STYLE.get(sc, "-"))
+        if b.band_up_cost_per_task_central.notna().any():
+            ax.plot(b.month, b.band_up_cost_per_task_central, color=c, lw=1, ls=(0, (6, 2, 1, 2)))
     ax.set_yscale("log")
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v:g}"))
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
@@ -77,6 +85,8 @@ def chart(df: pd.DataFrame, path: Path):
     sc_label = {"slow": "slow scenario (no change; under base where base is flat)"}
     handles += [Line2D([], [], color=INK2, lw=2, ls=STYLE[sc], label=sc_label.get(sc, f"{sc} scenario")) for sc in d.scenario.unique()]
     handles += [plt.Rectangle((0, 0), 1, 1, color=INK2, alpha=0.15, label="low-high volumes (base)")]
+    if d.band_up_cost_per_task_central.notna().any():
+        handles += [Line2D([], [], color=INK2, lw=1, ls=(0, (6, 2, 1, 2)), label="one band up (base, central)")]
     ax.legend(handles=handles, frameon=False, fontsize=8.5, labelcolor=INK2, loc="upper center",
               bbox_to_anchor=(0.5, -0.08), ncol=2)
     fig.tight_layout()
@@ -106,7 +116,14 @@ def main(argv=None) -> int:
     first, last = df.month.min(), df.month.max()
     s = df[df.month.isin([first, last])].pivot_table(index=["profile", "scenario"], columns="month",
                                                     values="cost_per_task_central")
+    print("central cost per task:")
     print(s.map(lambda v: f"${v:.4g}").to_string())
+    u = df[(df.month == first) & (df.scenario == "base") & df.band_up.notna()]
+    for r in u.itertuples():
+        print(f"{r.profile}: one band up ({r.band} -> {r.band_up}) in {first}, base: ${r.band_up_cost_per_task_central:.4g} "
+              f"per task ({r.band_up_change_central_pct:+.0f}%)")
+    for name, w in df[df.warnings != ""].groupby("profile").warnings.first().items():
+        print(f"warning, {name}: {w}")
     if df.example.any():
         print("note: profiles marked example use made-up volumes:", ", ".join(sorted(df[df.example].profile.unique())))
     print(f"wrote {out / 'profile_costs.csv'} ({len(df)} rows) and {out / 'profile_costs.png'}")

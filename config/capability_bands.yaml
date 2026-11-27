@@ -1,0 +1,26 @@
+# Capability bands for workflow profiles (model.band). Every profile reads its band edges from this file.
+#
+# A band covers Epoch ECI scores from its min_eci up to the next band's min_eci. A profile in a band is
+# priced at the cheapest model whose ECI is at or above the band's min_eci, month by month
+# (data/curves/capability_v4.csv): the cheapest way to get at least that capability.
+#
+# Edges are absolute ECI values, set against the 2026-11 frontier (best priced model: ECI 169.2):
+#   floor     120  v3's lowest band (ECI >= 120)
+#   small     140  v3's ECI >= 140 band
+#   mid       154  about 15 points below the best model (v3's mid tier: 5-15 points below)
+#   frontier  164  about 5 points below the best model (v3's frontier tier: within 5 points)
+# Because the edges are fixed, a band's price follows a fixed capability level as it gets cheaper.
+# Review them when the frontier moves: a new best model makes today's "frontier" next year's "mid".
+
+as_of: 2026-11
+edge_warning_points: 2     # an exact min_eci this close to a band edge gets a warning
+
+bands:                     # ascending order
+  - name: floor
+    min_eci: 120
+  - name: small
+    min_eci: 140
+  - name: mid
+    min_eci: 154
+  - name: frontier
+    min_eci: 164
