@@ -29,6 +29,7 @@ COLUMNS = {
     "input_price_per_mtok": "float64",
     "output_price_per_mtok": "float64",
     "cache_read_price_per_mtok": "float64",
+    "cache_write_price_per_mtok": "float64",
     "context_length": "Int64",
 }
 
@@ -63,6 +64,7 @@ def to_rows(payload: dict, snapshot_date: str) -> pd.DataFrame:
                 "input_price_per_mtok": per_million(pricing.get("prompt")),
                 "output_price_per_mtok": per_million(pricing.get("completion")),
                 "cache_read_price_per_mtok": per_million(pricing.get("input_cache_read")),
+                "cache_write_price_per_mtok": per_million(pricing.get("input_cache_write")),
                 "context_length": m.get("context_length"),
             }
         )
@@ -72,7 +74,16 @@ def to_rows(payload: dict, snapshot_date: str) -> pd.DataFrame:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", help="override snapshot date (YYYY-MM-DD, default: today UTC)")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="rebuild the parquet file from data/raw/*.json only (no API call)")
     args = parser.parse_args()
+    if args.rebuild:
+        frames = [to_rows(json.loads(f.read_text()), f.stem) for f in sorted(RAW_DIR.glob("*.json"))]
+        combined = pd.concat(frames, ignore_index=True).sort_values(["snapshot_date", "model_id"])
+        combined = combined.drop_duplicates(["snapshot_date", "model_id"], keep="last").reset_index(drop=True)
+        combined.to_parquet(PARQUET, index=False)
+        print(f"rebuilt {PARQUET.relative_to(ROOT)} from {len(frames)} raw files: {len(combined)} rows")
+        return 0
     snapshot_date = args.date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     resp = requests.get(URL, timeout=60)
@@ -90,7 +101,7 @@ def main() -> int:
     if PARQUET.exists():
         old = pd.read_parquet(PARQUET)
         old = old[old["snapshot_date"] != pd.Timestamp(snapshot_date)]  # idempotent re-run
-        combined = pd.concat([old.astype(COLUMNS), new], ignore_index=True)
+        combined = pd.concat([old.reindex(columns=list(COLUMNS)).astype(COLUMNS), new], ignore_index=True)
     else:
         combined = new
     combined = combined.sort_values(["snapshot_date", "model_id"]).reset_index(drop=True)

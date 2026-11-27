@@ -63,6 +63,7 @@ def extract(doc: dict, snap: str, commit: str) -> list[dict]:
             "input_price_per_mtok": inp,
             "output_price_per_mtok": out,
             "cache_read_price_per_mtok": per_m(v.get("cache_read_input_token_cost")),
+            "cache_write_price_per_mtok": per_m(v.get("cache_creation_input_token_cost")),
             "context_length": ctx if isinstance(ctx, int) else None,
             "litellm_commit": commit[:10],
         })

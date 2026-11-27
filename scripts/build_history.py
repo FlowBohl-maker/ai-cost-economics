@@ -436,7 +436,9 @@ def main() -> int:
     hist = hist.astype({"model_id": "string", "provider": "string", "canonical_id": "string", "source": "string",
                         "context_length": "Int64", "snapshot_date": "datetime64[ns]"})
     cols = ["snapshot_date", "model_id", "provider", "input_price_per_mtok", "output_price_per_mtok",
-            "cache_read_price_per_mtok", "context_length", "source", "canonical_id", "eci", "inferred_start", "price_conflict"]
+            "cache_read_price_per_mtok", "cache_write_price_per_mtok", "context_length", "source", "canonical_id", "eci",
+            "inferred_start", "price_conflict"]
+    hist = hist.reindex(columns=list(hist.columns) + [c for c in cols if c not in hist.columns])
     hist = hist[cols].sort_values(["snapshot_date", "source", "model_id"]).reset_index(drop=True)
     dupes = hist.duplicated(["snapshot_date", "source", "model_id"]).sum()
     if dupes:
