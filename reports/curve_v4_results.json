@@ -6,7 +6,9 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "cache_read_listed": false,
+   "cache_write_listed": false,
    "blended": 0.0875,
    "v3_base_price": 0.0875,
    "blended_vs_v3_pct": 0.0,
@@ -23,7 +25,9 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "cache_read_listed": false,
+   "cache_write_listed": false,
    "blended": 0.0875,
    "v3_base_price": 0.0875,
    "blended_vs_v3_pct": 0.0,
@@ -40,7 +44,9 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "cache_read_listed": true,
+   "cache_write_listed": true,
    "blended": 0.2,
    "v3_base_price": 0.2,
    "blended_vs_v3_pct": 0.0,
@@ -57,7 +63,9 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "cache_read_listed": true,
+   "cache_write_listed": true,
    "blended": 0.2,
    "v3_base_price": 0.2,
    "blended_vs_v3_pct": 0.0,
@@ -74,7 +82,9 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "cache_read_listed": true,
+   "cache_write_listed": true,
    "blended": 0.2,
    "v3_base_price": 0.2,
    "blended_vs_v3_pct": 0.0,
@@ -91,7 +101,9 @@
    "input": 2.0,
    "output": 10.0,
    "cache_read": 0.25,
+   "cache_write": 2.0,
    "cache_read_listed_share": 0.8571428571428571,
+   "cache_write_listed_share": 0.4,
    "blended": 4.0,
    "v3_base_price": 4.0,
    "blended_vs_v3_pct": 0.0,
@@ -108,7 +120,9 @@
    "input": 4.5,
    "output": 22.5,
    "cache_read": 0.22499999999999998,
+   "cache_write": 5.625,
    "cache_read_listed_share": 1.0,
+   "cache_write_listed_share": 0.875,
    "blended": 9.0,
    "v3_base_price": 9.0,
    "blended_vs_v3_pct": 0.0,
@@ -130,6 +144,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -141,6 +156,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -152,6 +168,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -163,6 +180,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -174,6 +192,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -185,6 +204,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -196,6 +216,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -207,6 +228,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -218,6 +240,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -229,6 +252,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -240,6 +264,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -251,6 +276,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -262,6 +288,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -273,6 +300,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -284,6 +312,7 @@
    "input": 0.049999999999999996,
    "output": 0.19999999999999998,
    "cache_read": 0.049999999999999996,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "same model",
    "base_annual_factor": 1.0
@@ -295,6 +324,7 @@
    "input": 0.049999999999999996,
    "output": 0.39999999999999997,
    "cache_read": 0.005,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "nearest band below",
    "base_annual_factor": 1.0
@@ -306,6 +336,7 @@
    "input": 0.049999999999999996,
    "output": 0.39999999999999997,
    "cache_read": 0.005,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "nearest band below",
    "base_annual_factor": 1.0
@@ -317,6 +348,7 @@
    "input": 0.049999999999999996,
    "output": 0.39999999999999997,
    "cache_read": 0.005,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "nearest band below",
    "base_annual_factor": 1.0
@@ -328,6 +360,7 @@
    "input": 0.049999999999999996,
    "output": 0.39999999999999997,
    "cache_read": 0.005,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "nearest band below",
    "base_annual_factor": 1.0
@@ -339,6 +372,7 @@
    "input": 0.049999999999999996,
    "output": 0.39999999999999997,
    "cache_read": 0.005,
+   "cache_write": 0.049999999999999996,
    "rate_from": "eci>=130",
    "rate_rule": "nearest band below",
    "base_annual_factor": 1.0
@@ -350,6 +384,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -361,6 +396,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -372,6 +408,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -383,6 +420,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -394,6 +432,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -405,6 +444,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -416,6 +456,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -427,6 +468,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -438,6 +480,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -449,6 +492,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -460,6 +504,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -471,6 +516,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -482,6 +528,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -493,6 +540,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -504,6 +552,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -515,6 +564,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -526,6 +576,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -537,6 +588,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -548,6 +600,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -559,6 +612,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -570,6 +624,7 @@
    "input": 0.09999999999999999,
    "output": 0.5,
    "cache_read": 0.01,
+   "cache_write": 0.12499999999999999,
    "rate_from": "eci>=160",
    "rate_rule": "same model",
    "base_annual_factor": 0.7779224731665425
@@ -581,6 +636,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -592,6 +648,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -603,6 +660,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -614,6 +672,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -625,6 +684,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -636,6 +696,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -647,6 +708,7 @@
    "input": 1.0,
    "output": 5.0,
    "cache_read": 0.049999999999999996,
+   "cache_write": 1.25,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -658,6 +720,7 @@
    "input": 2.0,
    "output": 10.0,
    "cache_read": 0.09999999999999999,
+   "cache_write": 2.5,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
@@ -669,6 +732,7 @@
    "input": 10.0,
    "output": 50.0,
    "cache_read": 1.0,
+   "cache_write": 12.5,
    "rate_from": "eci>=160",
    "rate_rule": "nearest band below",
    "base_annual_factor": 0.7779224731665425
